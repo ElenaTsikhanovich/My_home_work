@@ -23,5 +23,6 @@ public class ChatsServlet extends HttpServlet {
         req.setAttribute("list",list);
         req.getRequestDispatcher("/views/chats.jsp").forward(req,resp);
 
+
     }
 }

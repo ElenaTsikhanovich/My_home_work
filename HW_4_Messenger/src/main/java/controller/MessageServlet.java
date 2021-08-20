@@ -36,5 +36,6 @@ public class MessageServlet extends HttpServlet {
             req.setAttribute("addMessage", "Вы не можете отправлять сообщения незарегистрированным пользователям!");
             req.getRequestDispatcher("/views/message.jsp").forward(req, resp);
         }
+
     }
 }

@@ -18,6 +18,7 @@ public class Message {
         this.text= text;
     }
 
+
     public String getTime() {
         return time;
     }

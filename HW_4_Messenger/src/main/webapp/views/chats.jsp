@@ -6,6 +6,7 @@ pageEncoding="UTF-8"%>
 <%@page import="model.Message" %>
 
 
+
 <h2>Ваши сообщения</h2>
 
 <table border="2">

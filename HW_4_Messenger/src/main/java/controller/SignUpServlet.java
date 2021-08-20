@@ -33,5 +33,6 @@ public class SignUpServlet extends HttpServlet {
             req.setAttribute("userName", user.getFio());
             req.getRequestDispatcher("/views/chose.jsp").forward(req, resp);
         }
+
     }
 }

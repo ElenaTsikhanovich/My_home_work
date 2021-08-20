@@ -4,7 +4,6 @@ pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
-
 <h2><%=(String)request.getAttribute("userName") %>, выберите адресата, введите сообщение
     и нажмите  <span style="color:blue">Отправить!</span></h2>
 

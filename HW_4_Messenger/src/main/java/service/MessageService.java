@@ -25,6 +25,7 @@ public class MessageService {
         this.userService=UserService.getInstance();
     }
 
+
     public boolean addMessage(HttpServletRequest request){
         String recipient = request.getParameter(PARAM_NAME_RECIPIENT);
         boolean b = userService.loginExist(recipient);

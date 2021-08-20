@@ -20,6 +20,7 @@ public class UserService {
 
     }
 
+
     public User addUser(HttpServletRequest request){
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String password = request.getParameter(PARAM_NAME_PASSWORD);

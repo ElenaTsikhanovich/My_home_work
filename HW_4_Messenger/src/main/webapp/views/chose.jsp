@@ -2,6 +2,7 @@
 contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 
+
 <h2><%=(String)request.getAttribute("userName") %>, теперь вы можете общаться!</h2>
 
 <form action="./message" method="get">

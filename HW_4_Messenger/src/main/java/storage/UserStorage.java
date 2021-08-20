@@ -13,6 +13,7 @@ public class UserStorage {
         this.allUsers = new HashMap<>();
     }
 
+
     public static UserStorage getInstance() {
         return instance;
     }
