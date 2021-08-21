@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MessageService {
-    private static String PARAM_NAME_TIME="time";
-    private static String PARAM_NAME_SENDER="sender";
     private static String PARAM_NAME_RECIPIENT="recipient";
     private static String PARAM_NAME_TEXT="text";
 
