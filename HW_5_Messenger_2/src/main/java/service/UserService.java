@@ -4,6 +4,11 @@ import model.User;
 import service.api.IUserService;
 import storage.FileUserStorage;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class UserService implements IUserService {
@@ -11,6 +16,7 @@ public class UserService implements IUserService {
     private static String PARAM_NAME_PASSWORD="password";
     private static String PARAM_NAME_FIO="fio";
     private static String PARAM_NAME_BIRTH="birth";
+
 
     private static UserService instance =new UserService();
     private FileUserStorage userStorage;
@@ -31,7 +37,8 @@ public class UserService implements IUserService {
             String password = request.getParameter(PARAM_NAME_PASSWORD);
             String fio = request.getParameter(PARAM_NAME_FIO);
             String birth = request.getParameter(PARAM_NAME_BIRTH);
-            User user = new User(login, password, fio, birth);
+            String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd:MM:yyyy HH:mm:ss"));
+            User user = new User(login, password, fio, birth,date);
             this.userStorage.putUser(user);
             return user;
         }
@@ -47,6 +54,16 @@ public class UserService implements IUserService {
                 &&x.getPassword().equalsIgnoreCase(password)).findFirst().orElse(null);
     }
 
+    @Override
+    public List<User> allUsers() {
+        List<User> allUsers=new ArrayList<>();
+        Map<String, User> users = this.userStorage.getAllUsers();
+        for(Map.Entry<String,User> item:users.entrySet()){
+            allUsers.add(item.getValue());
+        }
+        return allUsers;
+
+    }
 
     public boolean loginExist(String param){
         boolean isExist = userStorage.getAllUsers().containsKey(param);

@@ -21,6 +21,14 @@ pageEncoding="UTF-8"%>
     <input type="submit" value="отправить"/>
 </form>
 
+<form action="./chats" method="get">
+    <input type="submit" value="посмотреть ваши сообщения"/>
+</form>
+
+<form action="./user" method="get">
+    <input type="submit" value="посмотреть информацию о пользователях">
+</form>
+
 <form action="./" method="get">
     <input type="submit" value="выйти">
 </form>

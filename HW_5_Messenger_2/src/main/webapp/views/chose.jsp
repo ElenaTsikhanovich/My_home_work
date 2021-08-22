@@ -13,6 +13,10 @@ pageEncoding="UTF-8"%>
     <input type="submit" value="посмотреть ваши сообщения"/>
 </form>
 
+<form action="./user" method="get">
+    <input type="submit" value="посмотреть информацию о пльзователях">
+</form>
+
 <form action="./" method="get">
     <input type="submit" value="выйти">
 </form>
