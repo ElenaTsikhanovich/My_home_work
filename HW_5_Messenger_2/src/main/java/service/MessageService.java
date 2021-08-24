@@ -5,6 +5,7 @@ import model.User;
 import service.api.IMessageService;
 import storage.FileMessageStorage;
 import storage.MessageStorage;
+import storage.api.IMessageStorage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -18,12 +19,18 @@ public class MessageService implements IMessageService {
     private static String PARAM_NAME_TEXT="text";
 
     private static MessageService instance=new MessageService();
-    private FileMessageStorage messageStorage;
+    private IMessageStorage messageStorage;
     private UserService userService;
 
     private MessageService() {
-        this.messageStorage=FileMessageStorage.getInstance();
         this.userService=UserService.getInstance();
+    }
+
+    @Override
+    public void storageChoose(String storage) {
+        if (storage.equalsIgnoreCase("file")){
+            this.messageStorage=FileMessageStorage.getInstance();
+        } else this.messageStorage=MessageStorage.getInstance();
     }
 
     @Override

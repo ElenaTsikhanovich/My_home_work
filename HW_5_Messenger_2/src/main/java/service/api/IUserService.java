@@ -10,5 +10,6 @@ public interface IUserService {
     User addUser(HttpServletRequest request);
     User getUser(HttpServletRequest request);
     List<User> allUsers();
+    void storageChoose(String storage);
 
 }

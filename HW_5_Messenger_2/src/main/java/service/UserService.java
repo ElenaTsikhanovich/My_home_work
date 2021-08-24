@@ -3,6 +3,9 @@ package service;
 import model.User;
 import service.api.IUserService;
 import storage.FileUserStorage;
+import storage.UserStorage;
+import storage.api.IUserStorage;
+
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,12 +22,16 @@ public class UserService implements IUserService {
 
 
     private static UserService instance =new UserService();
-    private FileUserStorage userStorage;
-
+    private IUserStorage userStorage;
 
     private UserService() {
-        this.userStorage = FileUserStorage.getInstance();
+    }
 
+    @Override
+    public void storageChoose(String storage) {
+        if (storage.equalsIgnoreCase("file")){
+            this.userStorage=FileUserStorage.getInstance();
+        } else this.userStorage= UserStorage.getInstance();
     }
 
     @Override
