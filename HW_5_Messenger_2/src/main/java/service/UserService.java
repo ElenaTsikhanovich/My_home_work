@@ -29,7 +29,7 @@ public class UserService implements IUserService {
 
     @Override
     public void storageChoose(String storage) {
-        if (storage.equalsIgnoreCase("file")){
+       if (storage.equalsIgnoreCase("file")){
             this.userStorage=FileUserStorage.getInstance();
         } else this.userStorage= UserStorage.getInstance();
     }

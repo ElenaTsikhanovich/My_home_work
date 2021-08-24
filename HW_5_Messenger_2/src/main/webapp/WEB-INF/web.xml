@@ -11,15 +11,9 @@
         <welcome-file>/views/start.jsp</welcome-file>
     </welcome-file-list>
 
-    <listener>
-        <listener-class>controller.listener.AppServletContextListener</listener-class>
-    </listener>
-
     <context-param>
         <param-name>storage</param-name>
         <param-value>file</param-value>
     </context-param>
-
-
 
 </web-app>
