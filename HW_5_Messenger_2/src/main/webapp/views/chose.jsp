@@ -20,3 +20,7 @@ pageEncoding="UTF-8"%>
 <form action="./" method="get">
     <input type="submit" value="выйти">
 </form>
+
+<form action="./about" method="get">
+    <input type="submit" value="об этом приложении">
+</form>

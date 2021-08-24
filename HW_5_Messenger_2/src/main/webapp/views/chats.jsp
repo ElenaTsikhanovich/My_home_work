@@ -40,6 +40,10 @@ pageEncoding="UTF-8"%>
     <input type="submit" value="назад">
 </form>
 
+<form action="./about" method="get">
+    <input type="submit" value="об этом приложении">
+</form>
+
 
 
 

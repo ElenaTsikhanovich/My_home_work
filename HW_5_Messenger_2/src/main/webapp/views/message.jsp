@@ -36,3 +36,7 @@ pageEncoding="UTF-8"%>
 <form action="./signIn" method="get">
     <input type="submit" value="назад">
 </form>
+
+<form action="./about" method="get">
+    <input type="submit" value="об этом приложении">
+</form>

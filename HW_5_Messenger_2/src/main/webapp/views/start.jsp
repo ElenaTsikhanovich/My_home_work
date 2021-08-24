@@ -12,3 +12,7 @@ pageEncoding="UTF-8"%>
 <form action="./signUp" method="get">
     <input type="submit" value="новый пользователь">
 </form>
+
+<form action="./about" method="get">
+    <input type="submit" value="об этом приложении">
+</form>
