@@ -21,7 +21,7 @@ pageEncoding="UTF-8"%>
     <input type="text" name="login" placeholder="логин"><br/>
     <input type="password" name="password" placeholder="пароль"><br/>
     <input type="text" name="fio" placeholder="ФИО"><br/>
-    <input type="date" name="birth" placeholder="дата рождения"><br/>
+    <input type="date" name="birth" placeholder="дата рождения дд:мм:гг"><br/>
     <input type="submit" value="зарегистрироваться"/>
 </form>
 <form action="./" method="get">
