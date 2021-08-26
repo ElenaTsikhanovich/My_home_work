@@ -25,7 +25,6 @@ public class MessageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
         User user = (User) req.getSession().getAttribute("user");
         req.setAttribute("userName", user.getFio());
         boolean answer = messageService.addMessage(req);
