@@ -1,6 +1,7 @@
 package controller;
 import service.MessageService;
 import model.Message;
+import service.api.IMessageService;
 
 import java.util.List;
 
@@ -15,7 +16,11 @@ import java.io.IOException;
 
 @WebServlet(name = "ChatsServlet",urlPatterns = "/chats")
 public class ChatsServlet extends HttpServlet {
-    private MessageService messageService= MessageService.getInstance();
+    private final IMessageService messageService;
+
+    public ChatsServlet() {
+        this.messageService = MessageService.getInstance();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

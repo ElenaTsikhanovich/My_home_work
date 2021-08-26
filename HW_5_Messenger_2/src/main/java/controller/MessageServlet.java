@@ -2,6 +2,7 @@ package controller;
 
 import model.User;
 import service.MessageService;
+import service.api.IMessageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +14,11 @@ import java.io.IOException;
 
 @WebServlet(name = "MessageServlet", urlPatterns = "/message")
 public class MessageServlet extends HttpServlet {
-    private MessageService messageService = MessageService.getInstance();
+    private final IMessageService messageService;
+
+    public MessageServlet() {
+        this.messageService =MessageService.getInstance();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

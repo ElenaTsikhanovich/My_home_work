@@ -2,6 +2,8 @@ package controller;
 
 import model.User;
 import service.UserService;
+import service.api.IUserService;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +15,12 @@ import java.io.IOException;
 
 @WebServlet(name ="SignUpServlet",urlPatterns = "/signUp")
 public class SignUpServlet extends HttpServlet {
-    private static UserService userService=UserService.getInstance();
+    private final IUserService userService;
+
+    public SignUpServlet() {
+        this.userService = UserService.getInstance();
+    }
+
     private String SESSION_NAME="user";
 
     @Override

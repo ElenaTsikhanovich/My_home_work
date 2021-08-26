@@ -2,6 +2,7 @@ package controller;
 
 import model.User;
 import service.UserService;
+import service.api.IUserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +15,12 @@ import java.io.IOException;
 
 @WebServlet(name ="SignInServlet",urlPatterns = "/signIn")
 public class SignInServlet extends HttpServlet {
-    private static UserService userService=UserService.getInstance();
+    private final IUserService userService;
+
+    public SignInServlet() {
+        this.userService =UserService.getInstance();
+    }
+
     private String SESSION_NAME="user";
 
     @Override
