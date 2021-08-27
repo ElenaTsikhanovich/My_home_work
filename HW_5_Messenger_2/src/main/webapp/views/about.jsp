@@ -19,8 +19,11 @@ pageEncoding="UTF-8"%>
     <c:when test="${requestScope.storage == 'file'}">
        Файл
     </c:when>
+    <c:when test="${requestScope.storage == 'memory'}">
+       Оперативная память
+        </c:when>
     <c:otherwise>
-         Оперативная память
+        Не известный тип хранилища
     </c:otherwise>
 </c:choose>
 <form action="./user" method="get">

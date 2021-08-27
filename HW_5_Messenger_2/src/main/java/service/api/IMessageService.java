@@ -9,6 +9,4 @@ import java.util.List;
 public interface IMessageService {
     boolean addMessage(HttpServletRequest request);
     List<Message> getMessage(HttpServletRequest request);
-    void storageChoose(String storage);
-
 }

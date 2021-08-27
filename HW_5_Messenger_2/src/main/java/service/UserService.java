@@ -4,6 +4,7 @@ import model.User;
 import service.api.IUserService;
 import storage.FileUserStorage;
 import storage.UserStorage;
+import storage.UserStorageFactory;
 import storage.api.IUserStorage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,13 +26,7 @@ public class UserService implements IUserService {
     private IUserStorage userStorage;
 
     private UserService() {
-    }
-
-    @Override
-    public void storageChoose(String storage) {
-       if (storage.equalsIgnoreCase("file")){
-            this.userStorage=FileUserStorage.getInstance();
-        } else this.userStorage= UserStorage.getInstance();
+       this.userStorage=UserStorageFactory.getInstance();
     }
 
     @Override

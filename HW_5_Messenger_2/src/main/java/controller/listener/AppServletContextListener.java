@@ -4,6 +4,9 @@ package controller.listener;
 
 import service.MessageService;
 import service.UserService;
+import storage.MessageStorageFactory;
+import storage.StorageType;
+import storage.UserStorageFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -17,11 +20,15 @@ public class AppServletContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         String storage = sce.getServletContext().getInitParameter("storage");
-        UserService.getInstance().storageChoose(storage);
-        MessageService.getInstance().storageChoose(storage);
+        StorageType storageType = StorageType.valueOf(storage.toUpperCase());
+        UserStorageFactory.setType(storageType);
+        MessageStorageFactory.setType(storageType);
 
         String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd:MM:yyy в HH:mm"));
         sce.getServletContext().setAttribute("date",startDate);
+
+
+
 
     }
 

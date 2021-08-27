@@ -5,6 +5,7 @@ import model.User;
 import service.api.IMessageService;
 import storage.FileMessageStorage;
 import storage.MessageStorage;
+import storage.MessageStorageFactory;
 import storage.api.IMessageStorage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,13 +25,7 @@ public class MessageService implements IMessageService {
 
     private MessageService() {
         this.userService=UserService.getInstance();
-    }
-
-    @Override
-    public void storageChoose(String storage) {
-        if (storage.equalsIgnoreCase("file")){
-            this.messageStorage=FileMessageStorage.getInstance();
-        } else this.messageStorage=MessageStorage.getInstance();
+        this.messageStorage=MessageStorageFactory.getInstance();
     }
 
     @Override
