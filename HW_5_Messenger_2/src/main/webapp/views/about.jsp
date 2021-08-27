@@ -14,18 +14,35 @@ pageEncoding="UTF-8"%>
 <h2> Об этом приложении </h2>
 <p>Приложение запущено: <%=request.getAttribute("startDate")%>
 </p>
+
 <p>Выбранный способ хранения данных:
+<p> Пользователи:
 <c:choose>
-    <c:when test="${requestScope.storage == 'file'}">
+    <c:when test="${requestScope.userStorage == 'FILE'}">
        Файл
     </c:when>
-    <c:when test="${requestScope.storage == 'memory'}">
+    <c:when test="${requestScope.userStorage == 'MEMORY'}">
        Оперативная память
         </c:when>
     <c:otherwise>
         Не известный тип хранилища
     </c:otherwise>
 </c:choose>
+</p>
+<p> Сообщения:
+<c:choose>
+    <c:when test="${requestScope.messageStorage == 'FILE'}">
+       Файл
+    </c:when>
+    <c:when test="${requestScope.messageStorage == 'MEMORY'}">
+       Оперативная память
+        </c:when>
+    <c:otherwise>
+        Не известный тип хранилища
+    </c:otherwise>
+</c:choose>
+</p>
+</p>
 <form action="./user" method="get">
     <input type="submit" value="посмотреть информацию о пользователях">
 </form>

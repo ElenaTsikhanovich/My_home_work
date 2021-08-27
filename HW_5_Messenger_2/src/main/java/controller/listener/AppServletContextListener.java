@@ -19,10 +19,12 @@ import java.time.format.DateTimeFormatter;
 public class AppServletContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        String storage = sce.getServletContext().getInitParameter("storage");
-        StorageType storageType = StorageType.valueOf(storage.toUpperCase());
-        UserStorageFactory.setType(storageType);
-        MessageStorageFactory.setType(storageType);
+        String user_storage = sce.getServletContext().getInitParameter("user_storage");
+        String message_storage = sce.getServletContext().getInitParameter("message_storage");
+        StorageType storageTypeUser = StorageType.valueOf(user_storage.toUpperCase());
+        StorageType storageTypeMessage = StorageType.valueOf(message_storage.toUpperCase());
+        UserStorageFactory.setType(storageTypeUser);
+        MessageStorageFactory.setType(storageTypeMessage);
 
         String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd:MM:yyy в HH:mm"));
         sce.getServletContext().setAttribute("date",startDate);

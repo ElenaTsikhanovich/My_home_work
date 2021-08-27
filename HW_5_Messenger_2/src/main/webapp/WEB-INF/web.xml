@@ -12,8 +12,12 @@
     </welcome-file-list>
 
     <context-param>
-        <param-name>storage</param-name>
+        <param-name>user_storage</param-name>
         <param-value>file</param-value>
+    </context-param>
+    <context-param>
+        <param-name>message_storage</param-name>
+        <param-value>memory</param-value>
     </context-param>
 
 </web-app>

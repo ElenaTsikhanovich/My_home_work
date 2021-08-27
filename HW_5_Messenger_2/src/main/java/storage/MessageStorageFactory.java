@@ -5,6 +5,10 @@ import storage.api.IMessageStorage;
 public class MessageStorageFactory {
     private static StorageType type=null;
 
+    public static StorageType getType() {
+        return type;
+    }
+
     public static void setType(StorageType type) {
         if(type!=null){
             MessageStorageFactory.type = type;

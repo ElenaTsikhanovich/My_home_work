@@ -6,6 +6,10 @@ public class UserStorageFactory {
 
     private static StorageType type=null;
 
+    public static StorageType getType() {
+        return type;
+    }
+
     public synchronized static void setType(StorageType type) {
         if(type!=null){
             UserStorageFactory.type = type;

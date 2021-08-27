@@ -1,5 +1,8 @@
 package controller;
 
+import storage.MessageStorageFactory;
+import storage.UserStorageFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,8 +15,10 @@ import java.io.IOException;
 public class AboutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String storage = req.getServletContext().getInitParameter("storage");
-        req.setAttribute("storage",storage);
+        String userStorage = String.valueOf(UserStorageFactory.getType());
+        String messageStorage = String.valueOf(MessageStorageFactory.getType());
+        req.setAttribute("userStorage",userStorage);
+        req.setAttribute("messageStorage",messageStorage);
 
         String date = (String) req.getServletContext().getAttribute("date");
         req.setAttribute("startDate",date);
