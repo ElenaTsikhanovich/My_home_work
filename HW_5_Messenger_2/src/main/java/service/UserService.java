@@ -3,6 +3,7 @@ package service;
 import model.User;
 import service.api.IUserService;
 import storage.FileUserStorage;
+import storage.StorageType;
 import storage.UserStorage;
 import storage.UserStorageFactory;
 import storage.api.IUserStorage;
@@ -76,4 +77,5 @@ public class UserService implements IUserService {
     public static UserService getInstance() {
         return instance;
     }
+
 }

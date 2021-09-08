@@ -13,11 +13,11 @@
 
     <context-param>
         <param-name>user_storage</param-name>
-        <param-value>file</param-value>
+        <param-value>database</param-value>
     </context-param>
     <context-param>
         <param-name>message_storage</param-name>
-        <param-value>memory</param-value>
+        <param-value>database</param-value>
     </context-param>
 
 </web-app>

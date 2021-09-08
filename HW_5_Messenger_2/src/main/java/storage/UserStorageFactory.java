@@ -28,6 +28,8 @@ public class UserStorageFactory {
                 return FileUserStorage.getInstance();
             case MEMORY:
                 return UserStorage.getInstance();
+            case DATABASE:
+                return DataBaseUserStorage.getInstance();
             default:
                 throw new IllegalStateException("Тип хранилища неизвестен");
         }

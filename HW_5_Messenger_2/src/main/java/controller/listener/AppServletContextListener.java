@@ -12,6 +12,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -23,7 +24,7 @@ public class AppServletContextListener implements ServletContextListener {
         String message_storage = sce.getServletContext().getInitParameter("message_storage");
         StorageType storageTypeUser = StorageType.valueOf(user_storage.toUpperCase());
         StorageType storageTypeMessage = StorageType.valueOf(message_storage.toUpperCase());
-        UserStorageFactory.setType(storageTypeUser);
+        UserStorageFactory.setType(StorageType.DATABASE);
         MessageStorageFactory.setType(storageTypeMessage);
 
         String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd:MM:yyy в HH:mm"));

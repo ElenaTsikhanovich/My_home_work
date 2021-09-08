@@ -24,6 +24,9 @@ pageEncoding="UTF-8"%>
     <c:when test="${requestScope.userStorage == 'MEMORY'}">
        Оперативная память
         </c:when>
+    <c:when test="${requestScope.userStorage == 'DATABASE'}">
+       База данных
+        </c:when>
     <c:otherwise>
         Не известный тип хранилища
     </c:otherwise>
@@ -36,6 +39,9 @@ pageEncoding="UTF-8"%>
     </c:when>
     <c:when test="${requestScope.messageStorage == 'MEMORY'}">
        Оперативная память
+        </c:when>
+    <c:when test="${requestScope.messageStorage == 'DATABASE'}">
+        База данных
         </c:when>
     <c:otherwise>
         Не известный тип хранилища

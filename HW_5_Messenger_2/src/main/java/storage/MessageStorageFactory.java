@@ -26,6 +26,8 @@ public class MessageStorageFactory {
                 return FileMessageStorage.getInstance();
             case MEMORY:
                 return MessageStorage.getInstance();
+            case DATABASE:
+                return DataBaseMessageStorage.getInstance();
             default:
                 throw new IllegalStateException("Тип хранилища неизвестен");
         }

@@ -2,5 +2,6 @@ package storage;
 
 public enum StorageType {
     FILE,
-    MEMORY
+    MEMORY,
+    DATABASE
 }
