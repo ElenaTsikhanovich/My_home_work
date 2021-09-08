@@ -32,6 +32,7 @@ public class DataBaseUserStorage implements IUserStorage {
 
         } catch (SQLException e) {
             throw new IllegalStateException("Ошибка работы с базой данных");
+
         }
     }
 

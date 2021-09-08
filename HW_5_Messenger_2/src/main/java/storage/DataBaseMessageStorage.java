@@ -29,6 +29,7 @@ public class DataBaseMessageStorage implements IMessageStorage {
                 preparedStatement.executeUpdate();
             }
         }catch (SQLException e){
+
             throw new IllegalStateException("Ошибка работы с базой данных");
         }
 
