@@ -250,7 +250,7 @@ public class DataStorage {
                     }
                 }
             }catch (IOException e){
-                e.getMessage();
+                throw new IllegalStateException("Ошибка работы с базой данных", e);
 
             }
         }catch (SQLException e) {
