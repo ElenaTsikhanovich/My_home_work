@@ -5,6 +5,7 @@ import model.Department;
 import storage.api.IDepartmentStorage;
 import storage.utils.AppDataSource;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DepartmentStorage implements IDepartmentStorage {
-    private AppDataSource appDataSource;
+    private DataSource dataSource;
     private static DepartmentStorage instance =new DepartmentStorage();
     private DepartmentStorage(){
-        this.appDataSource=AppDataSource.getInstance();
+        this.dataSource=AppDataSource.getInstance();
     }
 
     public static DepartmentStorage getInstance() {
@@ -26,8 +27,7 @@ public class DepartmentStorage implements IDepartmentStorage {
     @Override
     public Department get(Long id) {
         Department department = new Department();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try (Connection connection = comboPooledDataSource.getConnection();){
+        try (Connection connection = dataSource.getConnection();){
             try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.id, departments.name, parent_dep.name \n" +
                     "FROM application.departments\n" +
                     "JOIN application.departments AS parent_dep ON departments.parent=parent_dep.id\n" +
@@ -49,8 +49,7 @@ public class DepartmentStorage implements IDepartmentStorage {
     @Override
     public List<Department> getAll() {
         List<Department> allDepartments = new ArrayList<>();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try(Connection connection = comboPooledDataSource.getConnection();) {
+        try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.id, " +
                     "departments.name FROM application.departments;")) {
                 ResultSet resultSet = preparedStatement.executeQuery();

@@ -2,30 +2,18 @@ package storage.utils;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 
 public class AppDataSource {
-    private final static AppDataSource instance=new AppDataSource();
+    private static AppDataSource instance;
+    private ComboPooledDataSource comboPooledDataSource;
 
-    private static ComboPooledDataSource comboPooledDataSource;
-
-    public ComboPooledDataSource getComboPooledDataSource() {
-        return comboPooledDataSource;
-    }
-
-    public static AppDataSource getInstance() {
-        return instance;
-    }
-
-    private AppDataSource(){
-        getConnection();
-    }
-
-    private void getConnection(){
+    private AppDataSource() {
         comboPooledDataSource = new ComboPooledDataSource();
         try {
             comboPooledDataSource.setDriverClass("org.postgresql.Driver");
-        } catch (PropertyVetoException e){
+        } catch (PropertyVetoException e) {
             throw new IllegalStateException("Ошибка загрузки драйвера");
         }
         comboPooledDataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/crm");
@@ -33,4 +21,12 @@ public class AppDataSource {
         comboPooledDataSource.setPassword("6780911");
     }
 
+    public static DataSource getInstance() {
+        if(instance==null){
+            synchronized (AppDataSource.class){
+                instance=new AppDataSource();
+            }
+        }
+        return instance.comboPooledDataSource;
+    }
 }

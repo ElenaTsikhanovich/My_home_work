@@ -7,15 +7,16 @@ import model.Position;
 import storage.api.IEmployerStorage;
 import storage.utils.AppDataSource;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmployerStorage implements IEmployerStorage {
-    private AppDataSource appDataSource;
+    private DataSource dataSource;
     private static EmployerStorage instance=new EmployerStorage();
     private EmployerStorage(){
-        this.appDataSource=AppDataSource.getInstance();
+        this.dataSource=AppDataSource.getInstance();
     }
 
     public static EmployerStorage getInstance() {
@@ -25,8 +26,7 @@ public class EmployerStorage implements IEmployerStorage {
     @Override
     public long add(Employer employer) {
         long employerId=0;
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try (Connection connection = comboPooledDataSource.getConnection();) {
+        try (Connection connection = dataSource.getConnection();) {
             try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.employers" +
                     " (name, salary, department, position) " +
                     "VALUES (?,?,?,?);", Statement.RETURN_GENERATED_KEYS)) {
@@ -51,8 +51,7 @@ public class EmployerStorage implements IEmployerStorage {
     @Override
     public Employer get(Long id) {
         Employer employer = new Employer();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try(Connection connection = comboPooledDataSource.getConnection();) {
+        try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement =connection.prepareStatement("SELECT employers.name,\n" +
                     "employers.salary, \n" +
                     "departments.name AS department, \n" +
@@ -84,8 +83,7 @@ public class EmployerStorage implements IEmployerStorage {
     @Override
     public List<Employer> getAll() {
         List<Employer> allEmployers=new ArrayList<>();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try (Connection connection = comboPooledDataSource.getConnection();){
+        try (Connection connection = dataSource.getConnection();){
             try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT employers.id, employers.name\n" +
                     "FROM application.employers;")){
                 final ResultSet resultSet = preparedStatement.executeQuery();
@@ -104,8 +102,7 @@ public class EmployerStorage implements IEmployerStorage {
 
     public List<Employer> getEmployersOnPosition(Long id){
         List<Employer> employersOnPosition=new ArrayList<>();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try(Connection connection = comboPooledDataSource.getConnection();) {
+        try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT positions.name,\n" +
                     "employers.name, employers.id FROM application.positions\n" +
                     "JOIN application.employers ON positions.id=employers.position\n" +
@@ -127,8 +124,7 @@ public class EmployerStorage implements IEmployerStorage {
 
     public List<Employer> getEmployersInDepartment(Long id){
         List<Employer> employersInDepartment=new ArrayList<>();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try (Connection connection = comboPooledDataSource.getConnection();){
+        try (Connection connection = dataSource.getConnection();){
             try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.name,\n" +
                     "employers.name AS employers,\n" +
                     "employers.id AS employer_id\n" +

@@ -5,6 +5,7 @@ import model.Position;
 import storage.api.IPositionStorage;
 import storage.utils.AppDataSource;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PositionStorage implements IPositionStorage {
-    private AppDataSource appDataSource;
+    private DataSource dataSource;
     private static PositionStorage instance = new PositionStorage();
     private PositionStorage(){
-        this.appDataSource=AppDataSource.getInstance();
+        this.dataSource=AppDataSource.getInstance();
     }
 
     public static PositionStorage getInstance() {
@@ -26,8 +27,7 @@ public class PositionStorage implements IPositionStorage {
     @Override
     public Position get(Long id) {
         Position position = new Position();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try (Connection connection = comboPooledDataSource.getConnection();){
+        try (Connection connection =dataSource.getConnection();){
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT positions.name\n" +
                     "FROM application.positions\n" +
                     "WHERE positions.id=?;")) {
@@ -46,8 +46,7 @@ public class PositionStorage implements IPositionStorage {
     @Override
     public List<Position> getAll() {
         List<Position> allPositions=new ArrayList<>();
-        final ComboPooledDataSource comboPooledDataSource = appDataSource.getComboPooledDataSource();
-        try (Connection connection = comboPooledDataSource.getConnection();){
+        try (Connection connection = dataSource.getConnection();){
             try (PreparedStatement preparedStatement= connection.prepareStatement("SELECT positions.id, positions.name\n" +
                     "FROM application.positions;")){
                 ResultSet resultSet = preparedStatement.executeQuery();
