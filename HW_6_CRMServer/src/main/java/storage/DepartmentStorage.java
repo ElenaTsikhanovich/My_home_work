@@ -29,16 +29,16 @@ public class DepartmentStorage implements IDepartmentStorage {
     public Department get(Long id) {
         Department department = new Department();
         try (Connection connection = dataSource.getConnection();){
-            try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.id, departments.name, parent_dep.name \n" +
-                    "FROM application.departments\n" +
-                    "JOIN application.departments AS parent_dep ON departments.parent=parent_dep.id\n" +
-                    "WHERE departments.id=?;")){
+            try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.id, departments.name, departments.parent \n" +
+                    "FROM application.departments WHERE departments.id=?;")){
                 preparedStatement.setLong(1,id);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                resultSet.next();
-                department.setId(resultSet.getLong(1));
-                department.setName(resultSet.getString(2));
-                department.setParent(resultSet.getString(3));
+                if(resultSet.next()) {
+                    department.setId(resultSet.getLong(1));
+                    department.setName(resultSet.getString(2));
+                    Department parent = get(resultSet.getLong(3));
+                    department.setParent(parent);
+                }
             }
 
         }catch (SQLException e) {
@@ -52,13 +52,14 @@ public class DepartmentStorage implements IDepartmentStorage {
         List<Department> allDepartments = new ArrayList<>();
         try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.id, " +
-                    "departments.name, parent_dep.name FROM application.departments JOIN application.departments AS parent_dep ON departments.parent=parent_dep.id;")) {
+                    "departments.name, departments.parent FROM application.departments;")) {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()){
                     Department department = new Department();
                     department.setId(resultSet.getLong(1));
                     department.setName(resultSet.getString(2));
-                    department.setParent(resultSet.getString(3));
+                    Department parent = get(resultSet.getLong(3));
+                    department.setParent(parent);
                     allDepartments.add(department);
                 }
             }

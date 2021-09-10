@@ -3,7 +3,7 @@ package model;
 public class Department {
     private Long id;
     private String name;
-    private String parent;
+    private Department parent;
 
     public Department(){
 
@@ -25,11 +25,11 @@ public class Department {
         this.name = name;
     }
 
-    public String getParent() {
+    public Department getParent() {
         return parent;
     }
 
-    public void setParent(String parent) {
+    public void setParent(Department parent) {
         this.parent = parent;
     }
 }

@@ -23,7 +23,7 @@ pageEncoding="UTF-8"%>
         <tr>
             <td>${department.getId()}</td>
             <td width="200">${department.getName()}</td>
-            <td width="200">${department.getParent()}</td>
+            <td width="200">${department.getParent().getName()}</td>
         </tr>
 </table>
 
