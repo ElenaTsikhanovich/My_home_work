@@ -62,4 +62,6 @@ public class PositionStorage implements IPositionStorage {
         }
         return allPositions;
     }
+
+
 }

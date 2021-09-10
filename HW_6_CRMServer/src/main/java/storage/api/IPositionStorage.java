@@ -1,6 +1,6 @@
 package storage.api;
 
-import model.Employer;
+import model.Department;
 import model.Position;
 
 import java.util.List;
