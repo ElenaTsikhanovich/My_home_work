@@ -28,14 +28,14 @@ public class PositionStorage implements IPositionStorage {
     public Position get(Long id) {
         Position position = new Position();
         try (Connection connection =dataSource.getConnection();){
-            try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT positions.name\n" +
+            try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT positions.id, positions.name\n" +
                     "FROM application.positions\n" +
                     "WHERE positions.id=?;")) {
                 preparedStatement.setLong(1,id);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 resultSet.next();
-                position.setId(id);
-                position.setName(resultSet.getString(1));
+                position.setId(resultSet.getLong(1));
+                position.setName(resultSet.getString(2));
             }
         }catch (SQLException e) {
             throw new IllegalStateException("Ошибка работы с базой данных", e);
@@ -47,7 +47,7 @@ public class PositionStorage implements IPositionStorage {
     public List<Position> getAll() {
         List<Position> allPositions=new ArrayList<>();
         try (Connection connection = dataSource.getConnection();){
-            try (PreparedStatement preparedStatement= connection.prepareStatement("SELECT positions.id, positions.name\n" +
+            try (PreparedStatement preparedStatement= connection.prepareStatement("SELECT positions.id, positions.name " +
                     "FROM application.positions;")){
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()){

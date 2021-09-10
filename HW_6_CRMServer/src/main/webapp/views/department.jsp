@@ -26,10 +26,6 @@ pageEncoding="UTF-8"%>
             <td width="200">${department.getParent()}</td>
         </tr>
 </table>
-<h2>Сотрудники отдела</h2>
-<c:forEach var="employer" items="${employerInDep}" >
-                <p>${employer.getId()} - <a href="./employer?id=${employer.getId()}">${employer.getName()}</a></p>
-                </c:forEach>
 
   <form action="./" method="get">
       <input type="submit" value="назад">

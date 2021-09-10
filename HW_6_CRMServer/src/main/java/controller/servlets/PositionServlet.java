@@ -2,7 +2,10 @@ package controller.servlets;
 
 import model.Employer;
 import model.Position;
-import service.DataService;
+
+import service.DepartmentService;
+import service.EmployerService;
+import service.PositionService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,18 +22,16 @@ import java.util.Set;
 @WebServlet(name = "PositionServlet", urlPatterns = "/position")
 public class PositionServlet extends HttpServlet {
     private static String PARAM_ID="id";
-    private DataService dataService;
+    private PositionService positionService;
     public PositionServlet(){
-        this.dataService=DataService.getInstance();
+        this.positionService=PositionService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id =req.getParameter(PARAM_ID);
-        Position position = this.dataService.getPosition(Long.valueOf(id));
-        List<Employer> employersOnPosition = this.dataService.getEmployerOnPosition(Long.valueOf(id));
+        Position position = this.positionService.getPosition(Long.valueOf(id));
         req.setAttribute("position",position);
-        req.setAttribute("employersOnPosition",employersOnPosition);
         req.getRequestDispatcher("views/position.jsp").forward(req,resp);
     }
 }

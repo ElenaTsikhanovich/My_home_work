@@ -52,12 +52,13 @@ public class DepartmentStorage implements IDepartmentStorage {
         List<Department> allDepartments = new ArrayList<>();
         try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.id, " +
-                    "departments.name FROM application.departments;")) {
+                    "departments.name, parent_dep.name FROM application.departments JOIN application.departments AS parent_dep ON departments.parent=parent_dep.id;")) {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()){
                     Department department = new Department();
                     department.setId(resultSet.getLong(1));
                     department.setName(resultSet.getString(2));
+                    department.setParent(resultSet.getString(3));
                     allDepartments.add(department);
                 }
             }

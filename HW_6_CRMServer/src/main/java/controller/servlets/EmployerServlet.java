@@ -1,7 +1,12 @@
 package controller.servlets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import model.Department;
 import model.Employer;
-import service.DataService;
+import model.Position;
+import service.DepartmentService;
+import service.EmployerService;
+import service.PositionService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,17 +23,19 @@ public class EmployerServlet extends HttpServlet {
     private static String PARAM_DEP="department";
     private static String PARAM_POS="position";
     private static String PARAM_ID="id";
+   // private ObjectMapper objectMapper=new ObjectMapper();
 
-    private DataService dataService;
+
+    private EmployerService employerService;
 
     public EmployerServlet(){
-        this.dataService=DataService.getInstance();
+        this.employerService=EmployerService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id =req.getParameter(PARAM_ID);
-        Employer employer = this.dataService.getEmployer(Long.valueOf(id));
+        Employer employer = this.employerService.getEmployer(Long.valueOf(id));
         req.setAttribute("employer",employer);
         req.getRequestDispatcher("views/employer.jsp").forward(req,resp);
     }
@@ -37,11 +44,15 @@ public class EmployerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter(PARAM_NAME);
         String salary = req.getParameter(PARAM_SALARY);
-        String department = req.getParameter(PARAM_DEP);
-        String position = req.getParameter(PARAM_POS);
-        long addId = this.dataService.add(name,Double.valueOf(salary),Long.valueOf(department),Long.valueOf(position));
+        String departmentId = req.getParameter(PARAM_DEP);
+        String positionId = req.getParameter(PARAM_POS);
+        long addId = this.employerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
         req.setAttribute("name",name);
         req.setAttribute("id",String.valueOf(addId));
         req.getRequestDispatcher("views/registration.jsp").forward(req,resp);
+
+        //Employer employer = objectMapper.readValue(req.getInputStream(), Employer.class);
+
+
     }
 }

@@ -3,7 +3,10 @@ package controller.servlets;
 import model.Department;
 import model.Employer;
 import model.Position;
-import service.DataService;
+
+import service.DepartmentService;
+import service.EmployerService;
+import service.PositionService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,9 +20,13 @@ import java.util.List;
 @WebServlet(name = "ListServlet", urlPatterns = "/list")
 public class ListServlet extends HttpServlet {
     private static String PARAM_LIST="list";
-    private DataService dataService;
+    private EmployerService employerService;
+    private DepartmentService departmentService;
+    private PositionService positionService;
     public ListServlet(){
-        this.dataService=DataService.getInstance();
+        this.employerService=EmployerService.getInstance();
+        this.departmentService=DepartmentService.getInstance();
+        this.positionService=PositionService.getInstance();
     }
 
     @Override
@@ -27,15 +34,15 @@ public class ListServlet extends HttpServlet {
         String parameter = req.getParameter(PARAM_LIST);
         switch (parameter){
             case "employers":
-                List<Employer> employers = this.dataService.getEmployers();
+                List<Employer> employers = this.employerService.getEmployers();
                 req.setAttribute("employers", employers);
                 break;
             case "departments":
-                List<Department> departments = this.dataService.getDepartments();
+                List<Department> departments = this.departmentService.getDepartments();
                 req.setAttribute("departments",departments);
                 break;
             case "positions":
-                List<Position> positions = this.dataService.getPositions();
+                List<Position> positions = this.positionService.getPositions();
                 req.setAttribute("positions",positions);
                 break;
         }
