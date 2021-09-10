@@ -102,14 +102,15 @@ public class EmployerStorage implements IEmployerStorage {
         return allEmployers;
     }
 
-    public List<Employer> getEmployersOnPosition(Long id){
+    @Override
+    public List<Employer> onPosition(Long idPos) {
         List<Employer> employersOnPosition=new ArrayList<>();
         try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT positions.name,\n" +
                     "employers.name, employers.id FROM application.positions\n" +
                     "JOIN application.employers ON positions.id=employers.position\n" +
                     "WHERE positions.id=?;")) {
-                preparedStatement.setLong(1,id);
+                preparedStatement.setLong(1,idPos);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()){
                     Employer employer = new Employer();
@@ -124,7 +125,8 @@ public class EmployerStorage implements IEmployerStorage {
         return employersOnPosition;
     }
 
-    public List<Employer> getEmployersInDepartment(Long id){
+    @Override
+    public List<Employer> onDepartment(Long idDep) {
         List<Employer> employersInDepartment=new ArrayList<>();
         try (Connection connection = dataSource.getConnection();){
             try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.name,\n" +
@@ -133,7 +135,7 @@ public class EmployerStorage implements IEmployerStorage {
                     "FROM application.departments\n" +
                     "JOIN application.employers ON employers.department=departments.id\n" +
                     "WHERE departments.id=?;")){
-                preparedStatement.setLong(1,id);
+                preparedStatement.setLong(1,idDep);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()){
                     Employer employer = new Employer();
