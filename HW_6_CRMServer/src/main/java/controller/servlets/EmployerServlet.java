@@ -23,8 +23,6 @@ public class EmployerServlet extends HttpServlet {
     private static String PARAM_DEP="department";
     private static String PARAM_POS="position";
     private static String PARAM_ID="id";
-   // private ObjectMapper objectMapper=new ObjectMapper();
-
 
     private EmployerService employerService;
 
@@ -51,7 +49,7 @@ public class EmployerServlet extends HttpServlet {
         req.setAttribute("id",String.valueOf(addId));
         req.getRequestDispatcher("views/registration.jsp").forward(req,resp);
 
-        //Employer employer = objectMapper.readValue(req.getInputStream(), Employer.class);
+
 
 
     }
