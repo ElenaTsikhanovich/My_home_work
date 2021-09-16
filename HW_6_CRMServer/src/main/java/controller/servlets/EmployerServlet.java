@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet(name = "EmployerServlet", urlPatterns = "/employer")
 public class EmployerServlet extends HttpServlet {
@@ -23,6 +24,8 @@ public class EmployerServlet extends HttpServlet {
     private static String PARAM_DEP="department";
     private static String PARAM_POS="position";
     private static String PARAM_ID="id";
+    private static String PARAM_LIMIT="limit";
+    private static String PARAM_PAGE="page";
 
     private EmployerService employerService;
 
@@ -32,10 +35,25 @@ public class EmployerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id =req.getParameter(PARAM_ID);
-        Employer employer = this.employerService.getEmployer(Long.valueOf(id));
-        req.setAttribute("employer",employer);
-        req.getRequestDispatcher("views/employer.jsp").forward(req,resp);
+       if(req.getParameter(PARAM_ID)!=null) {
+           String id = req.getParameter(PARAM_ID);
+           Employer employer = this.employerService.getEmployer(Long.valueOf(id));
+           req.setAttribute("employer", employer);
+           req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
+       } else if((req.getParameter(PARAM_PAGE))!=null){
+           String limitParam = req.getParameter(PARAM_LIMIT);
+           String pageParam = req.getParameter(PARAM_PAGE);
+           long limit = Long.parseLong(limitParam);
+           long page = Long.parseLong(pageParam);
+           List<Employer> limitEmployers =
+                   this.employerService.getLimitEmployers(limit,page);
+           long countOfEmployers = this.employerService.getCountOfEmployers();
+           long pageCount= (long) Math.ceil(countOfEmployers*1/limit);
+           req.setAttribute("employers",limitEmployers);
+           req.setAttribute("page",page);
+           req.setAttribute("pageCount",pageCount);
+           req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
+       } else req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
     }
 
     @Override
@@ -47,7 +65,7 @@ public class EmployerServlet extends HttpServlet {
         long addId = this.employerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
         req.setAttribute("name",name);
         req.setAttribute("id",String.valueOf(addId));
-        req.getRequestDispatcher("views/registration.jsp").forward(req,resp);
+        req.getRequestDispatcher("views/employerReg.jsp").forward(req,resp);
 
 
 

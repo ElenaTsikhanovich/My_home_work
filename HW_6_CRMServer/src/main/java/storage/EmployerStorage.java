@@ -38,12 +38,10 @@ public class EmployerStorage implements IEmployerStorage {
             try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.employers" +
                     " (name, salary, department, position) " +
                     "VALUES (?,?,?,?);", Statement.RETURN_GENERATED_KEYS)) {
-
                 preparedStatement.setString(1, employer.getName());
                 preparedStatement.setDouble(2, employer.getSalary());
                 preparedStatement.setLong(3, employer.getDepartment().getId());
                 preparedStatement.setLong(4, employer.getPosition().getId());
-
                 preparedStatement.executeUpdate();
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
                 generatedKeys.next();
@@ -104,4 +102,47 @@ public class EmployerStorage implements IEmployerStorage {
         }
         return allEmployers;
     }
+
+    public List<Employer> getLimit(long limit, long offset){
+        List<Employer> limitEmployers=new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();){
+            try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT employers.id, " +
+                    "employers.name, employers.salary, employers.department, employers.position " +
+                    "FROM application.employers ORDER BY id ASC LIMIT ? OFFSET ?;")) {
+                preparedStatement.setLong(1,limit);
+                preparedStatement.setLong(2,offset);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()){
+                    Employer employer = new Employer();
+                    employer.setId(resultSet.getLong(1));
+                    employer.setName(resultSet.getString(2));
+                    employer.setSalary(resultSet.getDouble(3));
+                    employer.setDepartment(this.departmentService.getDepartment(resultSet.getLong(4)));
+                    employer.setPosition(this.positionService.getPosition(resultSet.getLong(5)));
+                    limitEmployers.add(employer);
+                }
+            }
+
+        }  catch (SQLException e) {
+            throw new IllegalStateException("Ошибка работы с базой данных", e);
+        }
+        return limitEmployers;
+    }
+
+    public long getCount(){
+        long count=0;
+        try(Connection connection = dataSource.getConnection();) {
+            try(Statement statement = connection.createStatement();) {
+                ResultSet resultSet = statement.executeQuery("SELECT COUNT(id) FROM application.employers;");
+                resultSet.next();
+                count=resultSet.getLong(1);
+            }
+
+        }catch (SQLException e) {
+            throw new IllegalStateException("Ошибка работы с базой данных", e);
+        }
+        return count;
+    }
+
+
     }

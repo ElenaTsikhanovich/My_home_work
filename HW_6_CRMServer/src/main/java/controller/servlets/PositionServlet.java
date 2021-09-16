@@ -1,5 +1,6 @@
 package controller.servlets;
 
+import model.Department;
 import model.Employer;
 import model.Position;
 
@@ -22,6 +23,7 @@ import java.util.Set;
 @WebServlet(name = "PositionServlet", urlPatterns = "/position")
 public class PositionServlet extends HttpServlet {
     private static String PARAM_ID="id";
+    private static String PARAM_LIST="list";
     private PositionService positionService;
     public PositionServlet(){
         this.positionService=PositionService.getInstance();
@@ -29,9 +31,15 @@ public class PositionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id =req.getParameter(PARAM_ID);
-        Position position = this.positionService.getPosition(Long.valueOf(id));
-        req.setAttribute("position",position);
-        req.getRequestDispatcher("views/position.jsp").forward(req,resp);
+        if (req.getParameter(PARAM_ID)!= null) {
+            String id = req.getParameter(PARAM_ID);
+            Position position = this.positionService.getPosition(Long.valueOf(id));
+            req.setAttribute("position", position);
+            req.getRequestDispatcher("views/position.jsp").forward(req, resp);
+        }else if (req.getParameter(PARAM_LIST)!=null) {
+            List<Position> positions = this.positionService.getPositions();
+            req.setAttribute("positions", positions);
+            req.getRequestDispatcher("views/positionList.jsp").forward(req, resp);
+        } else req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
     }
 }

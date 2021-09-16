@@ -40,7 +40,6 @@ public class EmployerService {
 
     public Employer getEmployer(Long id){
         Employer employer = this.iEmployerStorage.get(id);
-
         return employer;
     }
 
@@ -48,6 +47,18 @@ public class EmployerService {
         List<Employer> allEmployers = this.iEmployerStorage.getAll();
         return allEmployers;
     }
+
+    public List<Employer> getLimitEmployers(long limit, long page){
+        long offset = (page-1)*limit;
+        final List<Employer> limitEmployer = this.iEmployerStorage.getLimit(limit, offset);
+        return limitEmployer;
+    }
+
+    public long getCountOfEmployers(){
+        long count = this.iEmployerStorage.getCount();
+        return count;
+    }
+
 
 
 
