@@ -30,10 +30,12 @@ public class DepartmentServlet extends HttpServlet {
             Department department = this.departmentService.getDepartment(Long.valueOf(id));
             req.setAttribute("department", department);
             req.getRequestDispatcher("views/department.jsp").forward(req, resp);
-        } else if (req.getParameter(PARAM_LIST)!=null){
+        }
+        else if (req.getParameter(PARAM_LIST)!=null){
             List<Department> departments = this.departmentService.getDepartments();
             req.setAttribute("departments",departments);
             req.getRequestDispatcher("views/departmentList.jsp").forward(req,resp);
-        } else req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+        }
+        else req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
     }
 }

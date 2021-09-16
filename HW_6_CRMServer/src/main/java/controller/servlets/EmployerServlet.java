@@ -40,7 +40,8 @@ public class EmployerServlet extends HttpServlet {
            Employer employer = this.employerService.getEmployer(Long.valueOf(id));
            req.setAttribute("employer", employer);
            req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
-       } else if((req.getParameter(PARAM_PAGE))!=null){
+       }
+       else if((req.getParameter(PARAM_PAGE))!=null){
            String limitParam = req.getParameter(PARAM_LIMIT);
            String pageParam = req.getParameter(PARAM_PAGE);
            long limit = Long.parseLong(limitParam);
@@ -48,12 +49,16 @@ public class EmployerServlet extends HttpServlet {
            List<Employer> limitEmployers =
                    this.employerService.getLimitEmployers(limit,page);
            long countOfEmployers = this.employerService.getCountOfEmployers();
-           long pageCount= (long) Math.ceil(countOfEmployers*1/limit);
+           long pageCount;
+           if(countOfEmployers%limit==0){
+               pageCount=countOfEmployers/limit;
+           }else pageCount=(countOfEmployers/limit)+1;
            req.setAttribute("employers",limitEmployers);
            req.setAttribute("page",page);
            req.setAttribute("pageCount",pageCount);
            req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
-       } else req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
+       }
+       else req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
     }
 
     @Override

@@ -36,10 +36,12 @@ public class PositionServlet extends HttpServlet {
             Position position = this.positionService.getPosition(Long.valueOf(id));
             req.setAttribute("position", position);
             req.getRequestDispatcher("views/position.jsp").forward(req, resp);
-        }else if (req.getParameter(PARAM_LIST)!=null) {
+        }
+        else if (req.getParameter(PARAM_LIST)!=null) {
             List<Position> positions = this.positionService.getPositions();
             req.setAttribute("positions", positions);
             req.getRequestDispatcher("views/positionList.jsp").forward(req, resp);
-        } else req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
+        }
+        else req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
     }
 }
