@@ -72,8 +72,5 @@ public class EmployerServlet extends HttpServlet {
         req.setAttribute("id",String.valueOf(addId));
         req.getRequestDispatcher("views/employerReg.jsp").forward(req,resp);
 
-
-
-
     }
 }
