@@ -28,9 +28,13 @@ public class EmployerServlet extends HttpServlet {
     private static String PARAM_PAGE="page";
 
     private EmployerService employerService;
+    private DepartmentService departmentService;
+    private PositionService positionService;
 
     public EmployerServlet(){
         this.employerService=EmployerService.getInstance();
+        this.departmentService=DepartmentService.getInstance();
+        this.positionService=PositionService.getInstance();
     }
 
     @Override
@@ -59,8 +63,13 @@ public class EmployerServlet extends HttpServlet {
            req.setAttribute("page",page);
            req.setAttribute("pageCount",pageCount);
            req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
+       } else {
+           List<Position> positions = this.positionService.getPositions();
+           List<Department> departments = this.departmentService.getDepartments();
+           req.setAttribute("positions",positions);
+           req.setAttribute("departments",departments);
+           req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
        }
-       else req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
     }
 
     @Override

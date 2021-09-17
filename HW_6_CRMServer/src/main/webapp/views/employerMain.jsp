@@ -2,6 +2,10 @@
 contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page import="java.util.List" %>
+<%@page import="model.Department" %>
+<%@page import="model.Employer" %>
+<%@page import="model.Position" %>
 
 
 <!DOCTYPE html>
@@ -18,24 +22,15 @@ pageEncoding="UTF-8"%>
            <input type="text" name="salary" placeholder="сумма"><br/>
            <select name="department" size="1">
                        <option selected="selected">Выберите отдел</option>
-                       <option value="11">Отдел управления</option>
-                       <option value="12">Отдел товарооборота</option>
-                       <option value="13">Отдел продаж</option>
-                       <option value="14">Отдел закупок</option>
-                       <option value="15">Аналитический отдел</option>
-                  </select>
+                       <c:forEach var="department" items="${departments}" >
+                       <option value="${department.getId()}">${department.getName()}</option>
+                       </c:forEach>
+                   </select>
            <select name="position" size="1">
                        <option selected="selected">Выберите должность</option>
-                       <option value="1">Генеральный директор</option>
-                       <option value="2">Заместитель генерального директора</option>
-                       <option value="3">Директор отдела</option>
-                       <option value="4">Заведующий отделом</option>
-                       <option value="5">Администратор</option>
-                       <option value="6">специалист 1-й категории</option>
-                       <option value="7">специалист 2-й категории</option>
-                       <option value="8">Бухгалтер</option>
-                       <option value="9">Юрист</option>
-                       <option value="10">Секретарь</option>
+                       <c:forEach var="position" items="${positions}" >
+                       <option value="${position.getId()}">${position.getName()}</option>
+                       </c:forEach>
                   </select>
            <input type="submit" value="внести в базу"/>
        </form>
