@@ -6,10 +6,7 @@ import storage.api.IPositionStorage;
 import storage.utils.AppDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +19,26 @@ public class PositionStorage implements IPositionStorage {
 
     public static PositionStorage getInstance() {
         return instance;
+    }
+
+    @Override
+    public long add(Position position) {
+        long positionId=0;
+        try (Connection connection = dataSource.getConnection();) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.positions" +
+                    " (name) " +
+                    "VALUES (?);", Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, position.getName());
+                preparedStatement.executeUpdate();
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                generatedKeys.next();
+                positionId =generatedKeys.getLong(1);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Ошибка работы с базой данных", e);
+        }
+        return positionId;
     }
 
     @Override

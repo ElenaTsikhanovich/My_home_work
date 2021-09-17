@@ -7,10 +7,7 @@ import storage.api.IDepartmentStorage;
 import storage.utils.AppDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +20,27 @@ public class DepartmentStorage implements IDepartmentStorage {
 
     public static DepartmentStorage getInstance() {
         return instance;
+    }
+
+    @Override
+    public long add(Department department) {
+        long departmentId=0;
+        try (Connection connection = dataSource.getConnection();) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.departments" +
+                    " (name, parent) " +
+                    "VALUES (?,?);", Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, department.getName());
+                preparedStatement.setLong(2,department.getParent().getId());
+                preparedStatement.executeUpdate();
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                generatedKeys.next();
+                departmentId =generatedKeys.getLong(1);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Ошибка работы с базой данных", e);
+        }
+        return departmentId;
     }
 
     @Override

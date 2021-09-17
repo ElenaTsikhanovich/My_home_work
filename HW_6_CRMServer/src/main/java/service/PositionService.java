@@ -17,6 +17,10 @@ public class PositionService {
         this.iPositionStorage= PositionStorage.getInstance();
     }
 
+    public long addPosition(Position position){
+        long addId = this.iPositionStorage.add(position);
+        return addId;
+    }
     public List<Position> getPositions(){
         List<Position> allPositions = this.iPositionStorage.getAll();
         return allPositions;
