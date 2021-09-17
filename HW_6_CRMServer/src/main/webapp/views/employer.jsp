@@ -36,9 +36,9 @@ pageEncoding="UTF-8"%>
         </tr>
 </table>
 
-<form action="./" method="get">
-                      <input type="submit" value="назад">
-                  </form>
+<form action="./employer" method="get">
+   <input type="submit" value="назад">
+      </form>
 
 
 

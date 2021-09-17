@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
        <h3 style="color: black"><a href="./department?id=${department.getId()}">${department.getName()}</a></h3>
    </c:forEach>
 </c:if>
-<form action="./" method="get">
+<form action="./department" method="get">
     <input type="submit" value="назад">
 </form>
 </body>

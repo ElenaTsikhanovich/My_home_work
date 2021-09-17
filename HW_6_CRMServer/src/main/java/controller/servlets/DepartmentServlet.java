@@ -28,8 +28,13 @@ public class DepartmentServlet extends HttpServlet {
         if(req.getParameter(PARAM_ID)!=null) {
             String id = req.getParameter(PARAM_ID);
             Department department = this.departmentService.getDepartment(Long.valueOf(id));
-            req.setAttribute("department", department);
-            req.getRequestDispatcher("views/department.jsp").forward(req, resp);
+            if(department.getName()!=null) {
+                req.setAttribute("department", department);
+                req.getRequestDispatcher("views/department.jsp").forward(req, resp);
+            } else {
+                req.setAttribute("exception","Отдела с таким id нет в базе данных");
+                req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+            }
         }
         else if (req.getParameter(PARAM_LIST)!=null){
             List<Department> departments = this.departmentService.getDepartments();

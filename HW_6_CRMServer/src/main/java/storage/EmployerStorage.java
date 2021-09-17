@@ -63,16 +63,16 @@ public class EmployerStorage implements IEmployerStorage {
                     "FROM application.employers WHERE employers.id = ?;")) {
                 preparedStatement.setLong(1,id);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                resultSet.next();
-                employer.setId(resultSet.getLong(1));
-                employer.setName(resultSet.getString(2));
-                employer.setSalary(resultSet.getDouble(3));
-                Department department = this.departmentService.getDepartment(resultSet.getLong(4));
-                employer.setDepartment(department);
-                Position position = this.positionService.getPosition(resultSet.getLong(5));
-                employer.setPosition(position);
+                while (resultSet.next()) {
+                    employer.setId(resultSet.getLong(1));
+                    employer.setName(resultSet.getString(2));
+                    employer.setSalary(resultSet.getDouble(3));
+                    Department department = this.departmentService.getDepartment(resultSet.getLong(4));
+                    employer.setDepartment(department);
+                    Position position = this.positionService.getPosition(resultSet.getLong(5));
+                    employer.setPosition(position);
+                }
             }
-
         }catch (SQLException e) {
             throw new IllegalStateException("Ошибка работы с базой данных", e);
         }
@@ -94,7 +94,6 @@ public class EmployerStorage implements IEmployerStorage {
                     employer.setDepartment(this.departmentService.getDepartment(resultSet.getLong(4)));
                     employer.setPosition(this.positionService.getPosition(resultSet.getLong(5)));
                     allEmployers.add(employer);
-
                 }
             }
         } catch (SQLException e) {
@@ -134,8 +133,9 @@ public class EmployerStorage implements IEmployerStorage {
         try(Connection connection = dataSource.getConnection();) {
             try(Statement statement = connection.createStatement();) {
                 ResultSet resultSet = statement.executeQuery("SELECT COUNT(id) FROM application.employers;");
-                resultSet.next();
-                count=resultSet.getLong(1);
+                while (resultSet.next()) {
+                    count = resultSet.getLong(1);
+                }
             }
 
         }catch (SQLException e) {

@@ -20,7 +20,7 @@ pageEncoding="UTF-8"%>
    </c:forEach>
 </c:if>
 
-<form action="./" method="get">
+<form action="./position" method="get">
     <input type="submit" value="назад">
 </form>
 </body>

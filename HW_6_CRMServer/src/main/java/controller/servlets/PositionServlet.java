@@ -34,8 +34,13 @@ public class PositionServlet extends HttpServlet {
         if (req.getParameter(PARAM_ID)!= null) {
             String id = req.getParameter(PARAM_ID);
             Position position = this.positionService.getPosition(Long.valueOf(id));
-            req.setAttribute("position", position);
-            req.getRequestDispatcher("views/position.jsp").forward(req, resp);
+            if(position.getName()!=null) {
+                req.setAttribute("position", position);
+                req.getRequestDispatcher("views/position.jsp").forward(req, resp);
+            } else {
+                req.setAttribute("exception","Должности с таким id нет в базе данных");
+                req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
+            }
         }
         else if (req.getParameter(PARAM_LIST)!=null) {
             List<Position> positions = this.positionService.getPositions();

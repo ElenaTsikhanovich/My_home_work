@@ -1,6 +1,8 @@
 <%@ page language="java"
 contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -38,7 +40,17 @@ pageEncoding="UTF-8"%>
            <input type="submit" value="внести в базу"/>
        </form>
 
+<h3 style="color:red">
+   <c:if test="${requestScope.registration != null}">
+<c:out value="${requestScope.registration}" />
+       </c:if>
+
 <h1>Карточка сотрудника</h1>
+<h3 style="color:red">
+   <c:if test="${requestScope.exception != null}">
+<c:out value="${requestScope.exception}" />
+       </c:if>
+       </h3>
        <form action="./employer" method="get">
            <input type="text" name="id" placeholder="id"><br/>
            <input type="submit" value="получить данные сотрудника"/>
@@ -46,6 +58,8 @@ pageEncoding="UTF-8"%>
 
 <h1><a href="./employer?limit=20&page=1">Посмотреть список всех сотрудников</a></h1>
 
-
+<form action="./" method="get">
+   <input type="submit" value="назад">
+      </form>
 </body>
 </html>

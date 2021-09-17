@@ -42,7 +42,7 @@ pageEncoding="UTF-8"%>
     <a href="./employer?limit=20&page=${requestScope.page+1}">>></a>
 </c:if>
 
-<form action="./" method="get">
+<form action="./employer" method="get">
     <input type="submit" value="назад">
 
 </form>

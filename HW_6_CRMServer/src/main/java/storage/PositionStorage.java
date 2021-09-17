@@ -31,11 +31,12 @@ public class PositionStorage implements IPositionStorage {
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT positions.id, positions.name\n" +
                     "FROM application.positions\n" +
                     "WHERE positions.id=?;")) {
-                preparedStatement.setLong(1,id);
+                preparedStatement.setLong(1, id);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                resultSet.next();
-                position.setId(resultSet.getLong(1));
-                position.setName(resultSet.getString(2));
+                while (resultSet.next()) {
+                    position.setId(resultSet.getLong(1));
+                    position.setName(resultSet.getString(2));
+                }
             }
         }catch (SQLException e) {
             throw new IllegalStateException("Ошибка работы с базой данных", e);

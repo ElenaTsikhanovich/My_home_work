@@ -33,7 +33,7 @@ public class DepartmentStorage implements IDepartmentStorage {
                     "FROM application.departments WHERE departments.id=?;")){
                 preparedStatement.setLong(1,id);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                if(resultSet.next()) {
+                while (resultSet.next()) {
                     department.setId(resultSet.getLong(1));
                     department.setName(resultSet.getString(2));
                     Department parent = get(resultSet.getLong(3));
