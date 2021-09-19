@@ -60,6 +60,16 @@ public class EmployerService {
     }
 
 
+    public long addFromJason(Employer employer){
+        Department department = this.departmentService.getDepartment(employer.getDepartment().getId());
+        employer.setDepartment(department);
+        Position position = this.positionService.getPosition(employer.getPosition().getId());
+        employer.setPosition(position);
+        final long id = this.iEmployerStorage.add(employer);
+        return id;
+    }
+
+
 
 
 
