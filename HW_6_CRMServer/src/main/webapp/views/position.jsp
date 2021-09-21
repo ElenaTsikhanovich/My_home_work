@@ -25,7 +25,7 @@ pageEncoding="UTF-8"%>
         </tr>
 </table>
 
-        <form action="./position" method="get">
+        <form action="${pageContext.request.contextPath}/position" method="get">
               <input type="submit" value="назад">
           </form>
 

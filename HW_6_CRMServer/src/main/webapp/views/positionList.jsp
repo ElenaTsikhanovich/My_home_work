@@ -16,11 +16,11 @@ pageEncoding="UTF-8"%>
 <c:if test="${requestScope.positions != null}">
    <h1>Список должностей предприятия</h1>
    <c:forEach var="position" items="${positions}" >
-       <h3 style="color: black"><a href="./position?id=${position.getId()}">${position.getName()}</a></h3>
+       <h3 style="color: black"><a href="${pageContext.request.contextPath}/position?id=${position.getId()}">${position.getName()}</a></h3>
    </c:forEach>
 </c:if>
 
-<form action="./position" method="get">
+<form action="${pageContext.request.contextPath}/position" method="get">
     <input type="submit" value="назад">
 </form>
 </body>

@@ -18,14 +18,14 @@ pageEncoding="UTF-8"%>
 <c:out value="${requestScope.exception}" />
        </c:if>
        </h3>
-       <form action="./department" method="get">
+       <form action="${pageContext.request.contextPath}/department" method="get">
            <input type="text" name="id" placeholder="id"><br/>
            <input type="submit" value="получить данные"/>
        </form>
 
-<h1><a href="./department?list=1">Посмотреть список всех отделов</a></h1>
+<h1><a href="${pageContext.request.contextPath}/department?list=1">Посмотреть список всех отделов</a></h1>
 
- <form action="./" method="get">
+ <form action="${pageContext.request.contextPath}/" method="get">
       <input type="submit" value="назад">
   </form>
 

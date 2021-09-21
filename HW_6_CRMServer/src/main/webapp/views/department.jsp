@@ -27,7 +27,7 @@ pageEncoding="UTF-8"%>
         </tr>
 </table>
 
-  <form action="./department" method="get">
+  <form action="${pageContext.request.contextPath}/department" method="get">
       <input type="submit" value="назад">
   </form>
 </body>

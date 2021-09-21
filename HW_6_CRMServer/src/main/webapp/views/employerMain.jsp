@@ -17,7 +17,7 @@ pageEncoding="UTF-8"%>
 </head>
 <body>
 <h1>Регистрация нового сотрудника</h1>
-       	 <form action="./employer" method="post">
+       	 <form action="${pageContext.request.contextPath}/employer" method="post">
            <input type="text" name="name" placeholder="имя"><br/>
            <input type="text" name="salary" placeholder="сумма"><br/>
            <select name="department" size="1">
@@ -46,14 +46,14 @@ pageEncoding="UTF-8"%>
 <c:out value="${requestScope.exception}" />
        </c:if>
        </h3>
-       <form action="./employer" method="get">
+       <form action="${pageContext.request.contextPath}/employer" method="get">
            <input type="text" name="id" placeholder="id"><br/>
            <input type="submit" value="получить данные сотрудника"/>
        </form>
 
-<h1><a href="./employer?limit=20&page=1">Посмотреть список всех сотрудников</a></h1>
+<h1><a href="${pageContext.request.contextPath}/employer?limit=20&page=1">Посмотреть список всех сотрудников</a></h1>
 
-<form action="./" method="get">
+<form action="${pageContext.request.contextPath}/" method="get">
    <input type="submit" value="назад">
       </form>
 </body>

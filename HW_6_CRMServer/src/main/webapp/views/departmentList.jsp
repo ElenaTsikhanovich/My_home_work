@@ -16,10 +16,10 @@ pageEncoding="UTF-8"%>
 <c:if test="${requestScope.departments != null}">
    <h1>Список отделов предприятия</h1>
    <c:forEach var="department" items="${departments}" >
-       <h3 style="color: black"><a href="./department?id=${department.getId()}">${department.getName()}</a></h3>
+       <h3 style="color: black"><a href="${pageContext.request.contextPath}/department?id=${department.getId()}">${department.getName()}</a></h3>
    </c:forEach>
 </c:if>
-<form action="./department" method="get">
+<form action="${pageContext.request.contextPath}/department" method="get">
     <input type="submit" value="назад">
 </form>
 </body>

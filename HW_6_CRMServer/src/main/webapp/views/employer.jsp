@@ -36,7 +36,7 @@ pageEncoding="UTF-8"%>
         </tr>
 </table>
 
-<form action="./employer" method="get">
+<form action="${pageContext.request.contextPath}/employer" method="get">
    <input type="submit" value="назад">
       </form>
 

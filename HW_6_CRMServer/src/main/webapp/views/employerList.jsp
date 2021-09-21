@@ -19,11 +19,11 @@ pageEncoding="UTF-8"%>
 <c:if test="${requestScope.employers != null}">
    <h1>Список сотрудников предприятия</h1>
    <c:forEach var="employer" items="${employers}" >
-       <p style="color:black"><a href="./employer?id=${employer.getId()}">${employer.getName()}</a></p>
+       <p style="color:black"><a href="${pageContext.request.contextPath}/employer?id=${employer.getId()}">${employer.getName()}</a></p>
    </c:forEach>
 </c:if>
 <c:if test="${requestScope.page != 1}">
-    <a href="./employer?limit=20&page=${requestScope.page-1}"><<</a>
+    <a href="${pageContext.request.contextPath}/employer?limit=20&page=${requestScope.page-1}"><<</a>
 </c:if>
 
 <c:forEach begin="${page}" end="${page+10}" var="i">
@@ -33,7 +33,7 @@ pageEncoding="UTF-8"%>
             <td>${i}</td>
           </c:when>
           <c:otherwise>
-             <td><a href="./employer?limit=20&page=${i}">${i}</a></td>
+             <td><a href="${pageContext.request.contextPath}/employer?limit=20&page=${i}">${i}</a></td>
           </c:otherwise>
      </c:choose>
      </c:if>
@@ -42,7 +42,7 @@ pageEncoding="UTF-8"%>
     <a href="./employer?limit=20&page=${requestScope.page+1}">>></a>
 </c:if>
 
-<form action="./employer" method="get">
+<form action="${pageContext.request.contextPath}/employer" method="get">
     <input type="submit" value="назад">
 
 </form>
