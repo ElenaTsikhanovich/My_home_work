@@ -39,7 +39,7 @@ pageEncoding="UTF-8"%>
    <c:if test="${requestScope.registration != null}">
 <c:out value="${requestScope.registration}" />
        </c:if>
-
+       </h3>
 <h1>Карточка сотрудника</h1>
 <h3 style="color:red">
    <c:if test="${requestScope.exception != null}">
