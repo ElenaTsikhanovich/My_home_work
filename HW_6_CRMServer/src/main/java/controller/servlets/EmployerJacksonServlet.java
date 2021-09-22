@@ -2,7 +2,6 @@ package controller.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Employer;
-import model.EmployerDTO;
 import service.EmployerService;
 
 import javax.servlet.ServletException;
@@ -22,11 +21,19 @@ public class EmployerJacksonServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setCharacterEncoding("UTF-8");
+        req.setAttribute("registration",req.getParameter("registration"));
+        req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
+
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Employer employer = objectMapper.readValue(req.getInputStream(), Employer.class);
         long id = this.employerService.addFromJason(employer);
-        req.setAttribute("registration","Сотрудник "+employer.getName()+" успешно зарегистрирован под номером "+id);
-        req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
+        String registration="Сотрудник " + employer.getName() + " успешно зарегистрирован под номером " + id;
+        resp.sendRedirect(req.getContextPath()+"/employer_test?registration="+registration);
     }
     
 }
