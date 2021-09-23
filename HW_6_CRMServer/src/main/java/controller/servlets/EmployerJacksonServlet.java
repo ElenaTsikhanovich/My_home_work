@@ -31,7 +31,7 @@ public class EmployerJacksonServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Employer employer = objectMapper.readValue(req.getInputStream(), Employer.class);
-        long id = this.employerService.addFromJason(employer);
+        long id = this.employerService.add(employer);
         String registration="Сотрудник " + employer.getName() + " успешно зарегистрирован под номером " + id;
         resp.sendRedirect(req.getContextPath()+"/employer_test?registration="+registration);
     }

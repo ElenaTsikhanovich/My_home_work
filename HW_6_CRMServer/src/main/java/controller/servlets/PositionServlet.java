@@ -33,7 +33,7 @@ public class PositionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getParameter(PARAM_ID)!= null) {
             String id = req.getParameter(PARAM_ID);
-            Position position = this.positionService.getPosition(Long.valueOf(id));
+            Position position = this.positionService.get(Long.valueOf(id));
             if(position.getName()!=null) {
                 req.setAttribute("position", position);
                 req.getRequestDispatcher("views/position.jsp").forward(req, resp);
@@ -43,7 +43,7 @@ public class PositionServlet extends HttpServlet {
             }
         }
         else if (req.getParameter(PARAM_LIST)!=null) {
-            List<Position> positions = this.positionService.getPositions();
+            List<Position> positions = this.positionService.getAll();
             req.setAttribute("positions", positions);
             req.getRequestDispatcher("views/positionList.jsp").forward(req, resp);
         }

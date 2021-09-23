@@ -32,4 +32,13 @@ public class Department {
     public void setParent(Department parent) {
         this.parent = parent;
     }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parent=" + parent +
+                '}';
+    }
 }

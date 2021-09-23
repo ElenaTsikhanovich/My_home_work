@@ -27,7 +27,7 @@ public class DepartmentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(req.getParameter(PARAM_ID)!=null) {
             String id = req.getParameter(PARAM_ID);
-            Department department = this.departmentService.getDepartment(Long.valueOf(id));
+            Department department = this.departmentService.get(Long.valueOf(id));
             if(department.getName()!=null) {
                 req.setAttribute("department", department);
                 req.getRequestDispatcher("views/department.jsp").forward(req, resp);
@@ -37,7 +37,7 @@ public class DepartmentServlet extends HttpServlet {
             }
         }
         else if (req.getParameter(PARAM_LIST)!=null){
-            List<Department> departments = this.departmentService.getDepartments();
+            List<Department> departments = this.departmentService.getAll();
             req.setAttribute("departments",departments);
             req.getRequestDispatcher("views/departmentList.jsp").forward(req,resp);
         }

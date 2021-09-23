@@ -7,6 +7,7 @@ import model.Position;
 import service.DepartmentService;
 import service.EmployerService;
 import service.PositionService;
+import service.api.IEmployerService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +28,7 @@ public class EmployerServlet extends HttpServlet {
     private static String PARAM_LIMIT="limit";
     private static String PARAM_PAGE="page";
 
-    private EmployerService employerService;
+    private IEmployerService employerService;
     private DepartmentService departmentService;
     private PositionService positionService;
 
@@ -41,7 +42,7 @@ public class EmployerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        if(req.getParameter(PARAM_ID)!=null) {
            String id = req.getParameter(PARAM_ID);
-           Employer employer = this.employerService.getEmployer(Long.valueOf(id));
+           Employer employer = this.employerService.get(Long.valueOf(id));
            if(employer.getName()!=null) {
                req.setAttribute("employer", employer);
                req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
@@ -56,16 +57,16 @@ public class EmployerServlet extends HttpServlet {
            long limit = Long.parseLong(limitParam);
            long page = Long.parseLong(pageParam);
            List<Employer> limitEmployers =
-                   this.employerService.getLimitEmployers(limit,page);
-           long countOfEmployers = this.employerService.getCountOfEmployers();
+                   this.employerService.getLimit(limit,page);
+           long countOfEmployers = this.employerService.getCount();
            long pageCount=(long) Math.ceil((double) countOfEmployers/limit);
            req.setAttribute("employers",limitEmployers);
            req.setAttribute("page",page);
            req.setAttribute("pageCount",pageCount);
            req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
        } else {
-           List<Position> positions = this.positionService.getPositions();
-           List<Department> departments = this.departmentService.getDepartments();
+           List<Position> positions = this.positionService.getAll();
+           List<Department> departments = this.departmentService.getAll();
            req.setAttribute("positions",positions);
            req.setAttribute("departments",departments);
            req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);

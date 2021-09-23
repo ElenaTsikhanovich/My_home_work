@@ -51,4 +51,15 @@ public class Employer {
     public void setPosition(Position position) {
         this.position = position;
     }
+
+    @Override
+    public String toString() {
+        return "Employer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", salary=" + salary +
+                ", department=" + department +
+                ", position=" + position +
+                '}';
+    }
 }

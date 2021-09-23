@@ -1,12 +1,13 @@
 package service;
 
 import model.Department;
+import service.api.IDepartmentService;
 import storage.DepartmentStorage;
 import storage.api.IDepartmentStorage;
 
 import java.util.List;
 
-public class DepartmentService {
+public class DepartmentService implements IDepartmentService {
     private static DepartmentService instance=new DepartmentService();
     private IDepartmentStorage iDepartmentStorage;
 
@@ -18,7 +19,7 @@ public class DepartmentService {
         this.iDepartmentStorage= DepartmentStorage.getInstance();
     }
 
-    public long addDepartment(String depName, Long parentId){
+    public long add(String depName, Long parentId){
         Department department = new Department();
         department.setName(depName);
         if(parentId==null){
@@ -32,12 +33,12 @@ public class DepartmentService {
     }
 
 
-    public Department getDepartment(Long id){
+    public Department get(Long id){
         Department department = this.iDepartmentStorage.get(id);
         return department;
     }
 
-    public List<Department> getDepartments(){
+    public List<Department> getAll(){
         List<Department> allDepartments = this.iDepartmentStorage.getAll();
         return allDepartments;
     }
