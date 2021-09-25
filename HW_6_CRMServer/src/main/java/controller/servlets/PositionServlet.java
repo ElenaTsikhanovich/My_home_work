@@ -57,9 +57,12 @@ public class PositionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter(PARAM_NAME);
-        long id = this.iPositionService.add(name);
-        req.setAttribute("registration","Должность "+name+" внесена в базу под номером "+id);
+        if(name!="") {
+            long id = this.iPositionService.add(name);
+            req.setAttribute("registration", "Должность " + name + " внесена в базу под номером " + id);
+        } else {
+            req.setAttribute("registration", "Заполните все поля для регистрации");
+        }
         req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
-
     }
 }

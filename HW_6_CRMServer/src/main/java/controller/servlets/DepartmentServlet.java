@@ -54,9 +54,12 @@ public class DepartmentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter(PARAM_NAME);
         String parentId = req.getParameter(PARAM_PARENT);
-        long id = this.iDepartmentService.add(name, Long.valueOf(parentId));
-        req.setAttribute("registration",name+" успешно зарегистрирован под номером " +id);
+        if (name!="" && parentId!=null) {
+            long id = this.iDepartmentService.add(name, Long.valueOf(parentId));
+            req.setAttribute("registration", name + " успешно зарегистрирован под номером " + id);
+        }else {
+            req.setAttribute("registration", "Заполните все поля для регистрации");
+        }
         req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
-
     }
 }

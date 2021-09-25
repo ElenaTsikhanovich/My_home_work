@@ -82,11 +82,9 @@ public class EmployerServlet extends HttpServlet {
         String positionId = req.getParameter(PARAM_POS);
         if (name != "" && salary != null && departmentId != null && positionId != null) {
             long id = this.iEmployerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
-            String registration="Сотрудник " + name + " успешно зарегистрирован под номером " + id;
-            req.setAttribute("registration",registration);
+            req.setAttribute("registration","Сотрудник " + name + " успешно зарегистрирован под номером " + id);
         } else {
-            String registration = "Заполните все поля для регистрации";
-            req.setAttribute("registration", registration);
+            req.setAttribute("registration", "Заполните все поля для регистрации");
         }
         req.setAttribute("positions", this.iPositionService.getAll());
         req.setAttribute("departments", this.iDepartmentService.getAll());
