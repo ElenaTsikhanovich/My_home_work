@@ -22,57 +22,56 @@ import java.util.List;
 
 @WebServlet(name = "EmployerServlet", urlPatterns = "/employer")
 public class EmployerServlet extends HttpServlet {
-    private static String PARAM_NAME="name";
-    private static String PARAM_SALARY="salary";
-    private static String PARAM_DEP="department";
-    private static String PARAM_POS="position";
-    private static String PARAM_ID="id";
-    private static String PARAM_LIMIT="limit";
-    private static String PARAM_PAGE="page";
+    private static String PARAM_NAME = "name";
+    private static String PARAM_SALARY = "salary";
+    private static String PARAM_DEP = "department";
+    private static String PARAM_POS = "position";
+    private static String PARAM_ID = "id";
+    private static String PARAM_LIMIT = "limit";
+    private static String PARAM_PAGE = "page";
 
     private IEmployerService iEmployerService;
     private IDepartmentService iDepartmentService;
     private IPositionService iPositionService;
 
-    public EmployerServlet(){
-        this.iEmployerService=EmployerService.getInstance();
-        this.iDepartmentService=DepartmentService.getInstance();
-        this.iPositionService=PositionService.getInstance();
+    public EmployerServlet() {
+        this.iEmployerService = EmployerService.getInstance();
+        this.iDepartmentService = DepartmentService.getInstance();
+        this.iPositionService = PositionService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       if(req.getParameter(PARAM_ID)!=null) {
-           String id = req.getParameter(PARAM_ID);
-           Employer employer = this.iEmployerService.get(Long.valueOf(id));
-           if(employer.getName()!=null) {
-               req.setAttribute("employer", employer);
-               req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
-           } else {
-               req.setAttribute("exception","Сотрудника с таким id нет в базе данных");
-               req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
-           }
-       }
-       else if((req.getParameter(PARAM_PAGE))!=null){
-           String limitParam = req.getParameter(PARAM_LIMIT);
-           String pageParam = req.getParameter(PARAM_PAGE);
-           long limit = Long.parseLong(limitParam);
-           long page = Long.parseLong(pageParam);
-           List<Employer> limitEmployers =
-                   this.iEmployerService.getLimit(limit,page);
-           long countOfEmployers = this.iEmployerService.getCount();
-           long pageCount=(long) Math.ceil((double) countOfEmployers/limit);
-           req.setAttribute("employers",limitEmployers);
-           req.setAttribute("page",page);
-           req.setAttribute("pageCount",pageCount);
-           req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
-       } else {
-           List<Position> positions = this.iPositionService.getAll();
-           List<Department> departments = this.iDepartmentService.getAll();
-           req.setAttribute("positions",positions);
-           req.setAttribute("departments",departments);
-           req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
-       }
+        if (req.getParameter(PARAM_ID) != null) {
+            String id = req.getParameter(PARAM_ID);
+            Employer employer = this.iEmployerService.get(Long.valueOf(id));
+            if (employer.getName() != null) {
+                req.setAttribute("employer", employer);
+                req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
+            } else {
+                req.setAttribute("exception", "Сотрудника с таким id нет в базе данных");
+                req.setAttribute("positions", this.iPositionService.getAll());
+                req.setAttribute("departments", this.iDepartmentService.getAll());
+                req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
+            }
+        } else if ((req.getParameter(PARAM_PAGE)) != null) {
+            String limitParam = req.getParameter(PARAM_LIMIT);
+            String pageParam = req.getParameter(PARAM_PAGE);
+            long limit = Long.parseLong(limitParam);
+            long page = Long.parseLong(pageParam);
+            List<Employer> limitEmployers =
+                    this.iEmployerService.getLimit(limit, page);
+            long countOfEmployers = this.iEmployerService.getCount();
+            long pageCount = (long) Math.ceil((double) countOfEmployers / limit);
+            req.setAttribute("employers", limitEmployers);
+            req.setAttribute("page", page);
+            req.setAttribute("pageCount", pageCount);
+            req.getRequestDispatcher("views/employerList.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("positions", this.iPositionService.getAll());
+            req.setAttribute("departments", this.iDepartmentService.getAll());
+            req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
+        }
     }
 
     @Override
@@ -81,9 +80,20 @@ public class EmployerServlet extends HttpServlet {
         String salary = req.getParameter(PARAM_SALARY);
         String departmentId = req.getParameter(PARAM_DEP);
         String positionId = req.getParameter(PARAM_POS);
-        long  id = this.iEmployerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
-        req.setAttribute("registration","Сотрудник "+name+" успешно зарегистрирован под номером "+id);
-        req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
+        if (name != "" && salary != null && departmentId != null && positionId != null) {
+            long id = this.iEmployerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
+            String registration="Сотрудник " + name + " успешно зарегистрирован под номером " + id;
+            req.setAttribute("registration",registration);
+        } else {
+            String registration = "Заполните все поля для регистрации";
+            req.setAttribute("registration", registration);
+        }
+        req.setAttribute("positions", this.iPositionService.getAll());
+        req.setAttribute("departments", this.iDepartmentService.getAll());
+        req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
+        }
+
 
     }
-}
+
+
