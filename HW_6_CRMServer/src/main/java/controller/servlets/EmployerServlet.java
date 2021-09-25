@@ -45,7 +45,7 @@ public class EmployerServlet extends HttpServlet {
         if (req.getParameter(PARAM_ID) != null) {
             String id = req.getParameter(PARAM_ID);
             Employer employer = this.iEmployerService.get(Long.valueOf(id));
-            if (employer.getName() != null) {
+            if (employer!= null) {
                 req.setAttribute("employer", employer);
                 req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
             } else {

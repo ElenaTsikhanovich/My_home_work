@@ -34,9 +34,13 @@ public class EmployerService implements IEmployerService {
         employer.setName(name);
         employer.setSalary(salary);
         Department department = this.iDepartmentService.get(depId);
-        employer.setDepartment(department);
+        if(department!=null) {
+            employer.setDepartment(department);
+        }else throw new IllegalStateException("В базе данных нет отдела с таким id");
         Position position = this.iPositionService.get(posId);
-        employer.setPosition(position);
+        if(position!=null) {
+            employer.setPosition(position);
+        }else throw new IllegalStateException("В базе данных нет должности с таким id");
         final long id = this.iEmployerStorage.add(employer);
         return id;
     }
@@ -65,9 +69,13 @@ public class EmployerService implements IEmployerService {
 
     public long add(Employer employer){
         Department department = this.iDepartmentService.get(employer.getDepartment().getId());
-        employer.setDepartment(department);
+        if(department!=null) {
+            employer.setDepartment(department);
+        } else throw new IllegalStateException("В базе данных нет отдела с таким id");
         Position position = this.iPositionService.get(employer.getPosition().getId());
-        employer.setPosition(position);
+        if(position!=null) {
+            employer.setPosition(position);
+        } else throw new IllegalStateException("В базе данных нет должности с таким id");
         final long id = this.iEmployerStorage.add(employer);
         return id;
     }

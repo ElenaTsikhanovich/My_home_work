@@ -43,7 +43,7 @@ public class PositionStorage implements IPositionStorage {
 
     @Override
     public Position get(Long id) {
-        Position position = new Position();
+        Position position = null;
         try (Connection connection =dataSource.getConnection();){
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT positions.id, positions.name\n" +
                     "FROM application.positions\n" +
@@ -51,6 +51,7 @@ public class PositionStorage implements IPositionStorage {
                 preparedStatement.setLong(1, id);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
+                    position=new Position();
                     position.setId(resultSet.getLong(1));
                     position.setName(resultSet.getString(2));
                 }

@@ -32,7 +32,7 @@ public class DepartmentServlet extends HttpServlet {
         if(req.getParameter(PARAM_ID)!=null) {
             String id = req.getParameter(PARAM_ID);
             Department department = this.iDepartmentService.get(Long.valueOf(id));
-            if(department.getName()!=null) {
+            if(department!=null) {
                 req.setAttribute("department", department);
                 req.getRequestDispatcher("views/department.jsp").forward(req, resp);
             } else {

@@ -57,13 +57,14 @@ public class DepartmentStorage implements IDepartmentStorage {
 
     @Override
     public Department get(Long id) {
-        Department department = new Department();
+        Department department = null;
         try (Connection connection = dataSource.getConnection();){
             try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT departments.id, departments.name, departments.parent \n" +
                     "FROM application.departments WHERE departments.id=?;")){
                 preparedStatement.setLong(1,id);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
+                    department=new Department();
                     department.setId(resultSet.getLong(1));
                     department.setName(resultSet.getString(2));
                     Department parent = get(resultSet.getLong(3));

@@ -38,7 +38,7 @@ public class PositionServlet extends HttpServlet {
         if (req.getParameter(PARAM_ID)!= null) {
             String id = req.getParameter(PARAM_ID);
             Position position = this.iPositionService.get(Long.valueOf(id));
-            if(position.getName()!=null) {
+            if(position!=null) {
                 req.setAttribute("position", position);
                 req.getRequestDispatcher("views/position.jsp").forward(req, resp);
             } else {

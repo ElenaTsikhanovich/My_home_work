@@ -59,7 +59,7 @@ public class EmployerStorage implements IEmployerStorage {
 
     @Override
     public Employer get(Long id) {
-        Employer employer = new Employer();
+        Employer employer = null;
         try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement =connection.prepareStatement("SELECT employers.id, employers.name, " +
                     "employers.salary, employers.department, employers.position " +
@@ -67,6 +67,7 @@ public class EmployerStorage implements IEmployerStorage {
                 preparedStatement.setLong(1,id);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
+                    employer=new Employer();
                     employer.setId(resultSet.getLong(1));
                     employer.setName(resultSet.getString(2));
                     employer.setSalary(resultSet.getDouble(3));
