@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 @WebServlet(name = "EmployerJacksonServlet", urlPatterns = "/employer_test")
 public class EmployerJacksonServlet extends HttpServlet {
@@ -34,8 +35,7 @@ public class EmployerJacksonServlet extends HttpServlet {
         Employer employer = objectMapper.readValue(req.getInputStream(), Employer.class);
         long id = this.iEmployerService.add(employer);
         String registration="Сотрудник " + employer.getName() + " успешно зарегистрирован под номером " + id;
-        resp.sendRedirect(req.getContextPath()+"/employer_test?registration="+registration);
+        resp.sendRedirect(req.getContextPath()+"/employer_test?registration="+URLEncoder.encode(registration,"UTF-8"));
     }
-    
 }
 
