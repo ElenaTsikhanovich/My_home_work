@@ -39,16 +39,14 @@ public class DepartmentServlet extends HttpServlet {
                 req.setAttribute("exception","Отдела с таким id нет в базе данных");
                 req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
             }
-        }
-        else if (req.getParameter(PARAM_LIST)!=null){
+        } else {
             List<Department> departments = this.iDepartmentService.getAll();
             req.setAttribute("departments",departments);
-            req.getRequestDispatcher("views/departmentList.jsp").forward(req,resp);
-        }
-        else {
-            List<Department> departments = this.iDepartmentService.getAll();
-            req.setAttribute("departments",departments);
-            req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+            if(req.getParameter(PARAM_LIST)!=null){
+                req.getRequestDispatcher("views/departmentList.jsp").forward(req,resp);
+            } else {
+                req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+            }
         }
     }
 
