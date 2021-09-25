@@ -1,4 +1,4 @@
-package controller.servlets;
+package controller.servlets.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Employer;
