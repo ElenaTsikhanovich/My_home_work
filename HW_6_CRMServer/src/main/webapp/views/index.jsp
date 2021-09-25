@@ -10,7 +10,7 @@ pageEncoding="UTF-8"%>
 	<title>Главная</title>
 </head>
 <body>
-      <h1>Добро пожаловать в базу сотрудников нашего предприятия</h1>
+      <h1>Добро пожаловать в нашу компанию</h1>
 
     <a href="${pageContext.request.contextPath}/employer">Сотрудники</a>
     <a href="${pageContext.request.contextPath}/department">Отделы</a>

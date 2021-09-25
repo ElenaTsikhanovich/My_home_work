@@ -4,6 +4,7 @@ import model.Department;
 import model.Employer;
 import service.DepartmentService;
 import service.EmployerService;
+import service.api.IDepartmentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,16 +19,19 @@ import java.util.List;
 public class DepartmentServlet extends HttpServlet {
     private static String PARAM_ID="id";
     private static String PARAM_LIST="list";
+    private static String PARAM_NAME="name";
+    private static String PARAM_PARENT="parent";
 
-    private DepartmentService departmentService;
+    private IDepartmentService iDepartmentService;
+
     public DepartmentServlet(){
-        this.departmentService=DepartmentService.getInstance();
+        this.iDepartmentService=DepartmentService.getInstance();
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(req.getParameter(PARAM_ID)!=null) {
             String id = req.getParameter(PARAM_ID);
-            Department department = this.departmentService.get(Long.valueOf(id));
+            Department department = this.iDepartmentService.get(Long.valueOf(id));
             if(department.getName()!=null) {
                 req.setAttribute("department", department);
                 req.getRequestDispatcher("views/department.jsp").forward(req, resp);
@@ -37,10 +41,24 @@ public class DepartmentServlet extends HttpServlet {
             }
         }
         else if (req.getParameter(PARAM_LIST)!=null){
-            List<Department> departments = this.departmentService.getAll();
+            List<Department> departments = this.iDepartmentService.getAll();
             req.setAttribute("departments",departments);
             req.getRequestDispatcher("views/departmentList.jsp").forward(req,resp);
         }
-        else req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+        else {
+            List<Department> departments = this.iDepartmentService.getAll();
+            req.setAttribute("departments",departments);
+            req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String name = req.getParameter(PARAM_NAME);
+        String parentId = req.getParameter(PARAM_PARENT);
+        long id = this.iDepartmentService.add(name, Long.valueOf(parentId));
+        req.setAttribute("registration",name+" успешно зарегистрирован под номером " +id);
+        req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+
     }
 }

@@ -22,7 +22,7 @@ public class DepartmentService implements IDepartmentService {
     public long add(String depName, Long parentId){
         Department department = new Department();
         department.setName(depName);
-        if(parentId==null){
+        if(parentId==-1){
             department.setParent(null);
         }else {
             Department parentDep = this.iDepartmentStorage.get(parentId);

@@ -12,6 +12,24 @@ pageEncoding="UTF-8"%>
 	<title>Отделы предприятия</title>
 </head>
 <body>
+<h1>Регистрация нового отдела</h1>
+       	 <form action="${pageContext.request.contextPath}/department" method="post">
+           <input type="text" name="name" placeholder="название отдела"><br/>
+           <select name="parent" size="1">
+                       <option selected="selected">Выберите руководящий отдел</option>
+                       <option value="${-1}">Нет отдела</option>
+                       <c:forEach var="department" items="${departments}" >
+                       <option value="${department.getId()}">${department.getName()}</option>
+                       </c:forEach>
+                   </select>
+           <input type="submit" value="внести в базу"/>
+       </form>
+
+ <h3 style="color:red">
+     <c:if test="${requestScope.registration != null}">
+       <c:out value="${requestScope.registration}" />
+       </c:if>
+       </h3>
 <h1>Карточка отдела</h1>
 <h3 style="color:red">
    <c:if test="${requestScope.exception != null}">

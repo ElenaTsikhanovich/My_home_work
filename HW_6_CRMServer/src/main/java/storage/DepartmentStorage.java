@@ -26,15 +26,27 @@ public class DepartmentStorage implements IDepartmentStorage {
     public long add(Department department) {
         long departmentId=0;
         try (Connection connection = dataSource.getConnection();) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.departments" +
-                    " (name, parent) " +
-                    "VALUES (?,?);", Statement.RETURN_GENERATED_KEYS)) {
-                preparedStatement.setString(1, department.getName());
-                preparedStatement.setLong(2,department.getParent().getId());
-                preparedStatement.executeUpdate();
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                generatedKeys.next();
-                departmentId =generatedKeys.getLong(1);
+            if(department.getParent()!=null) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.departments" +
+                        " (name, parent) " +
+                        "VALUES (?,?);", Statement.RETURN_GENERATED_KEYS)) {
+                    preparedStatement.setString(1, department.getName());
+                    preparedStatement.setLong(2, department.getParent().getId());
+                    preparedStatement.executeUpdate();
+                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                    generatedKeys.next();
+                    departmentId = generatedKeys.getLong(1);
+                }
+            } else {
+                try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.departments" +
+                        " (name) " +
+                        "VALUES (?);", Statement.RETURN_GENERATED_KEYS)) {
+                    preparedStatement.setString(1, department.getName());
+                    preparedStatement.executeUpdate();
+                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                    generatedKeys.next();
+                    departmentId = generatedKeys.getLong(1);
+                }
             }
 
         } catch (SQLException e) {
