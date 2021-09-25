@@ -12,6 +12,18 @@ pageEncoding="UTF-8"%>
 	<title>Должности предприятия</title>
 </head>
 <body>
+<h1>Регистрация новой должности</h1>
+             	 <form action="${pageContext.request.contextPath}/position" method="post">
+                 <input type="text" name="name" placeholder="должность"><br/>
+                 <input type="submit" value="внести в базу"/>
+             </form>
+
+       <h3 style="color:red">
+           <c:if test="${requestScope.registration != null}">
+             <c:out value="${requestScope.registration}" />
+             </c:if>
+             </h3>
+
 <h1>Карточка должности</h1>
 <h3 style="color:red">
    <c:if test="${requestScope.exception != null}">

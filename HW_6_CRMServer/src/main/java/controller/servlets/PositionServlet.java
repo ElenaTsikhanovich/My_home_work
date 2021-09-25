@@ -7,6 +7,7 @@ import model.Position;
 import service.DepartmentService;
 import service.EmployerService;
 import service.PositionService;
+import service.api.IPositionService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,16 +25,19 @@ import java.util.Set;
 public class PositionServlet extends HttpServlet {
     private static String PARAM_ID="id";
     private static String PARAM_LIST="list";
-    private PositionService positionService;
+    private static String PARAM_NAME="name";
+
+    private IPositionService iPositionService;
+
     public PositionServlet(){
-        this.positionService=PositionService.getInstance();
+        this.iPositionService=PositionService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getParameter(PARAM_ID)!= null) {
             String id = req.getParameter(PARAM_ID);
-            Position position = this.positionService.get(Long.valueOf(id));
+            Position position = this.iPositionService.get(Long.valueOf(id));
             if(position.getName()!=null) {
                 req.setAttribute("position", position);
                 req.getRequestDispatcher("views/position.jsp").forward(req, resp);
@@ -43,10 +47,19 @@ public class PositionServlet extends HttpServlet {
             }
         }
         else if (req.getParameter(PARAM_LIST)!=null) {
-            List<Position> positions = this.positionService.getAll();
+            List<Position> positions = this.iPositionService.getAll();
             req.setAttribute("positions", positions);
             req.getRequestDispatcher("views/positionList.jsp").forward(req, resp);
         }
         else req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String name = req.getParameter(PARAM_NAME);
+        long id = this.iPositionService.add(name);
+        req.setAttribute("registration","Должность "+name+" внесена в базу под номером "+id);
+        req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
+
     }
 }

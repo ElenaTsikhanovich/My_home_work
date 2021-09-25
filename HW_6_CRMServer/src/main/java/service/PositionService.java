@@ -18,6 +18,14 @@ public class PositionService implements IPositionService {
         this.iPositionStorage= PositionStorage.getInstance();
     }
 
+    @Override
+    public long add(String name) {
+        Position position = new Position();
+        position.setName(name);
+        long addId = this.iPositionStorage.add(position);
+        return addId;
+    }
+
     public long add(Position position){
         long addId = this.iPositionStorage.add(position);
         return addId;
