@@ -7,7 +7,9 @@ import model.Position;
 import service.DepartmentService;
 import service.EmployerService;
 import service.PositionService;
+import service.api.IDepartmentService;
 import service.api.IEmployerService;
+import service.api.IPositionService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,21 +30,21 @@ public class EmployerServlet extends HttpServlet {
     private static String PARAM_LIMIT="limit";
     private static String PARAM_PAGE="page";
 
-    private IEmployerService employerService;
-    private DepartmentService departmentService;
-    private PositionService positionService;
+    private IEmployerService iEmployerService;
+    private IDepartmentService iDepartmentService;
+    private IPositionService iPositionService;
 
     public EmployerServlet(){
-        this.employerService=EmployerService.getInstance();
-        this.departmentService=DepartmentService.getInstance();
-        this.positionService=PositionService.getInstance();
+        this.iEmployerService=EmployerService.getInstance();
+        this.iDepartmentService=DepartmentService.getInstance();
+        this.iPositionService=PositionService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        if(req.getParameter(PARAM_ID)!=null) {
            String id = req.getParameter(PARAM_ID);
-           Employer employer = this.employerService.get(Long.valueOf(id));
+           Employer employer = this.iEmployerService.get(Long.valueOf(id));
            if(employer.getName()!=null) {
                req.setAttribute("employer", employer);
                req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
@@ -57,16 +59,16 @@ public class EmployerServlet extends HttpServlet {
            long limit = Long.parseLong(limitParam);
            long page = Long.parseLong(pageParam);
            List<Employer> limitEmployers =
-                   this.employerService.getLimit(limit,page);
-           long countOfEmployers = this.employerService.getCount();
+                   this.iEmployerService.getLimit(limit,page);
+           long countOfEmployers = this.iEmployerService.getCount();
            long pageCount=(long) Math.ceil((double) countOfEmployers/limit);
            req.setAttribute("employers",limitEmployers);
            req.setAttribute("page",page);
            req.setAttribute("pageCount",pageCount);
            req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
        } else {
-           List<Position> positions = this.positionService.getAll();
-           List<Department> departments = this.departmentService.getAll();
+           List<Position> positions = this.iPositionService.getAll();
+           List<Department> departments = this.iDepartmentService.getAll();
            req.setAttribute("positions",positions);
            req.setAttribute("departments",departments);
            req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
@@ -79,7 +81,7 @@ public class EmployerServlet extends HttpServlet {
         String salary = req.getParameter(PARAM_SALARY);
         String departmentId = req.getParameter(PARAM_DEP);
         String positionId = req.getParameter(PARAM_POS);
-        long  id = this.employerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
+        long  id = this.iEmployerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
         req.setAttribute("registration","Сотрудник "+name+" успешно зарегистрирован под номером "+id);
         req.getRequestDispatcher("views/employerMain.jsp").forward(req,resp);
 
