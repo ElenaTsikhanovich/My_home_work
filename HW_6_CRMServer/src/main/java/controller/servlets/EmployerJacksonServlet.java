@@ -3,6 +3,7 @@ package controller.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Employer;
 import service.EmployerService;
+import service.api.IEmployerService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,10 +15,10 @@ import java.io.IOException;
 @WebServlet(name = "EmployerJacksonServlet", urlPatterns = "/employer_test")
 public class EmployerJacksonServlet extends HttpServlet {
     private ObjectMapper objectMapper=new ObjectMapper();
-    private EmployerService employerService;
+    private IEmployerService iEmployerService;
 
     public EmployerJacksonServlet(){
-        this.employerService=EmployerService.getInstance();
+        this.iEmployerService=EmployerService.getInstance();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class EmployerJacksonServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Employer employer = objectMapper.readValue(req.getInputStream(), Employer.class);
-        long id = this.employerService.add(employer);
+        long id = this.iEmployerService.add(employer);
         String registration="Сотрудник " + employer.getName() + " успешно зарегистрирован под номером " + id;
         resp.sendRedirect(req.getContextPath()+"/employer_test?registration="+registration);
     }
