@@ -21,7 +21,7 @@ public class SimpleMain {
         System.out.println(employer2.toString());
 
 
-        updateName(lenaId,"Alena");
+        update(lenaId,"Alena");
         Employer employer = get(lenaId);
         System.out.println(employer.toString());
 
@@ -44,7 +44,7 @@ public class SimpleMain {
         return id;
     }
 
-    public static void updateName(Long id,String name){
+    public static void update(Long id,String name){
         Session session = AppSessionFactory.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
         Employer employer = session.get(Employer.class, id);
