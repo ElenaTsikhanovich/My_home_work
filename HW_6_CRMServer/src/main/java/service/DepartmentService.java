@@ -32,6 +32,20 @@ public class DepartmentService implements IDepartmentService {
         return addId;
     }
 
+    @Override
+    public long add(Department department) {
+        if (department.getParent()!=null){
+            if(department.getParent().getId()==null){
+                throw new IllegalStateException("Неверно передан параметр");
+            }
+            Department parentDep = this.iDepartmentStorage.get(department.getParent().getId());
+            if(parentDep!=null) {
+                department.setParent(parentDep);
+            }else throw new IllegalStateException("Неверно указан руководящий отдел");
+        }
+        final long addId = this.iDepartmentStorage.add(department);
+        return addId;
+    }
 
     public Department get(Long id){
         Department department = this.iDepartmentStorage.get(id);
