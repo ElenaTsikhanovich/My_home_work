@@ -1,4 +1,4 @@
-package Hibernate.onetomany_withTable.dto;
+package Hibernate.onetomany.dto;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +15,13 @@ public class Department implements Serializable {
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER)
+    //@JoinColumn
+    /*
+    Без этой аннотации связывание сущностей будет происходить с помощью третьей таблицы.
+    С этой аннотацияей связывание будет происходить на базе сушности Employer
+    посредством дополнительной колонки department_id
+    В остальном код такой же поэтому отдельную папку под него я не делала
+     */
     private List<Employer> employers;
 
     public Department(){

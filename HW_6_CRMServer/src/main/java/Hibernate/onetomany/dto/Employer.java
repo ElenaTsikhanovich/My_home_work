@@ -1,4 +1,4 @@
-package Hibernate.onetomany_withTable.dto;
+package Hibernate.onetomany.dto;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -1,8 +1,8 @@
-package Hibernate.onetomany_withTable;
+package Hibernate.onetomany;
 
-import Hibernate.onetomany_withTable.dto.Department;
-import Hibernate.onetomany_withTable.dto.Employer;
-import Hibernate.onetomany_withTable.utils.AppSessionFactory;
+import Hibernate.onetomany.dto.Department;
+import Hibernate.onetomany.dto.Employer;
+import Hibernate.onetomany.utils.AppSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

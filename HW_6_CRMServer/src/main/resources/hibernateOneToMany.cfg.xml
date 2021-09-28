@@ -24,14 +24,14 @@
             true
         </property>
         <property name="hibernate.default_schema">
-            onetomanytable
+            onetomany
         </property>
         <property name="hibernate.hbm2ddl.auto">
             update
         </property>
 
-        <mapping class="Hibernate.onetomany_withTable.dto.Employer"/>
-        <mapping class="Hibernate.onetomany_withTable.dto.Department"/>
+        <mapping class="Hibernate.onetomany.dto.Employer"/>
+        <mapping class="Hibernate.onetomany.dto.Department"/>
 
 
 

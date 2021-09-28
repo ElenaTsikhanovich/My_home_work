@@ -1,4 +1,4 @@
-package Hibernate.onetomany_withTable.utils;
+package Hibernate.onetomany.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
