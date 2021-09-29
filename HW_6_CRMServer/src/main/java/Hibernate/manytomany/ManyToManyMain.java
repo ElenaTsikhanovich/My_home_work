@@ -55,6 +55,8 @@ public class ManyToManyMain {
 
         transaction1.commit();
         session1.close();
+
+
         AppSessionFactory.shutDown();
 
     }
