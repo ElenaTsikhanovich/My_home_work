@@ -20,6 +20,7 @@ public class Department implements Serializable {
     //fetch это тип получения данных
     // EAGER - сможем получить getEmployers();
     // если LAZY то не сможем
+    //mappedBY указывает на владельца связи
 
     public Department(){
 
