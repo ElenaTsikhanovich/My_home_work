@@ -13,13 +13,15 @@ import java.util.List;
 public class ManyToOneMain {
     public static void main(String[] args) {
 
-        //некоторые методы для проверки правильности связей в таблицах
 
         //создали отдел
-        Department department = new Department("Бухгалтерия", new ArrayList<>());
+        Department department = new Department();
+        department.setName("Бухгалтерия");
         Long depId = saveDepartment(department);
         //создали Майка
-        Employer employer = new Employer("Mike", 6789.89, null);
+        Employer employer = new Employer();
+        employer.setName("Mike");
+        employer.setSalary(67668.789);
         Long empId = saveEmployer(employer);
 
         //сперва в отделе никто не работал
@@ -42,7 +44,9 @@ public class ManyToOneMain {
         }
 
         //появилась Лена и тоже устроилась в этот же отдел
-        Employer employer1 = new Employer("Lena", 67890.89, null);
+        Employer employer1 = new Employer();
+        employer1.setName("Lena");
+        employer1.setSalary(67686.78);
         Long empId2 = saveEmployer(employer1);
         updateEmployer(empId2,depId);
 
@@ -55,7 +59,8 @@ public class ManyToOneMain {
         }
 
         //создали второй отдел и в него перевели Майка
-        Department department2 = new Department("Отдел управления", new ArrayList<>());
+        Department department2 = new Department();
+        department2.setName("Аналитический отдел");
         Long depId1 = saveDepartment(department2);
         updateEmployer(empId,depId1);
 
@@ -74,6 +79,7 @@ public class ManyToOneMain {
             System.out.printf("Id: %d Name: %s Salary: %s Department: %s\n",
                     emp.getId(),emp.getName(),emp.getSalary(),emp.getDepartment().getName());
         }
+
     }
 
     public static Long saveDepartment(Department department){
@@ -110,7 +116,7 @@ public class ManyToOneMain {
         Transaction transaction = session.beginTransaction();
         Department department = session.get(Department.class, depId);
         List<Employer> employers = department.getEmployers();
-        transaction.commit();
+        transaction.commit();;
         session.close();
         return employers;
     }
