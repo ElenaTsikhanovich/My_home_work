@@ -19,20 +19,26 @@ public class OneToManyMain {
        saveEmployer(gary);
        List<Employer> employers = Arrays.asList(mike, lena, gary);
 
+       //добавляем всех созданных сотрудников в наш департамент
        Department department = new Department("Бухгалтерия", employers);
        Long depId = addDepartmentWithEmployers(department);
 
+       //проверяем что они добавились
         Department department1 = getDepartmentById(depId);
         System.out.println(department1.toString());
 
+        //добавляем в этот же департамент еще одного
         Employer andrey = new Employer("Andrey", 689.78);
         saveEmployer(andrey);
         addEmployerInDepartment(andrey,depId);
+        //проверяем что стало на одного больше
         System.out.println(getDepartmentById(depId).toString());
 
+        //теперь всех удалили и добавили вместо них одного нового
         Employer sasha = new Employer("Sasha", 67899.99);
         saveEmployer(sasha);
         updateEmployersInDepartment(sasha,depId);
+        //проверяем
         System.out.println(getDepartmentById(depId).toString());
 
         List<Employer> employersFromDepartment = getEmployersFromDepartment(depId);
