@@ -56,6 +56,7 @@ public class OneToManyMain {
         System.out.println(getDepartmentById(depId2).toString());
 
         AppSessionFactory.shutDown();
+
     }
 
     public static void saveEmployer(Employer employer){
