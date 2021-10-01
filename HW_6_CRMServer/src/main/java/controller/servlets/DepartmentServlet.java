@@ -1,5 +1,6 @@
 package controller.servlets;
 
+import controller.utils.Params;
 import model.Department;
 import model.Employer;
 import service.DepartmentService;
@@ -17,11 +18,6 @@ import java.util.List;
 
 @WebServlet(name = "DepartmentServlet", urlPatterns = "/department")
 public class DepartmentServlet extends HttpServlet {
-    private static String PARAM_ID="id";
-    private static String PARAM_LIST="list";
-    private static String PARAM_NAME="name";
-    private static String PARAM_PARENT="parent";
-
     private IDepartmentService iDepartmentService;
 
     public DepartmentServlet(){
@@ -29,8 +25,8 @@ public class DepartmentServlet extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(req.getParameter(PARAM_ID)!=null) {
-            String id = req.getParameter(PARAM_ID);
+        String id;
+        if((id=req.getParameter(Params.ID.getTitle()))!=null) {
             Department department = this.iDepartmentService.get(Long.valueOf(id));
             if(department!=null) {
                 req.setAttribute("department", department);
@@ -42,7 +38,7 @@ public class DepartmentServlet extends HttpServlet {
         } else {
             List<Department> departments = this.iDepartmentService.getAll();
             req.setAttribute("departments",departments);
-            if(req.getParameter(PARAM_LIST)!=null){
+            if(req.getParameter(Params.LIST.getTitle())!=null){
                 req.getRequestDispatcher("views/departmentList.jsp").forward(req,resp);
             } else {
                 req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
@@ -52,8 +48,8 @@ public class DepartmentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter(PARAM_NAME);
-        String parentId = req.getParameter(PARAM_PARENT);
+        String name = req.getParameter(Params.NAME.getTitle());
+        String parentId = req.getParameter(Params.PARENT.getTitle());
         if (name!="" && parentId!=null) {
             long id = this.iDepartmentService.add(name, Long.valueOf(parentId));
             req.setAttribute("registration", name + " успешно зарегистрирован под номером " + id);

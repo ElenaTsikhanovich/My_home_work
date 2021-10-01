@@ -1,5 +1,6 @@
 package controller.servlets;
 
+import controller.utils.Params;
 import model.Department;
 import model.Employer;
 import model.Position;
@@ -23,10 +24,6 @@ import java.util.Set;
 
 @WebServlet(name = "PositionServlet", urlPatterns = "/position")
 public class PositionServlet extends HttpServlet {
-    private static String PARAM_ID="id";
-    private static String PARAM_LIST="list";
-    private static String PARAM_NAME="name";
-
     private IPositionService iPositionService;
 
     public PositionServlet(){
@@ -35,8 +32,8 @@ public class PositionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getParameter(PARAM_ID)!= null) {
-            String id = req.getParameter(PARAM_ID);
+        String id;
+        if ((id=req.getParameter(Params.ID.getTitle())) != null) {
             Position position = this.iPositionService.get(Long.valueOf(id));
             if(position!=null) {
                 req.setAttribute("position", position);
@@ -46,7 +43,7 @@ public class PositionServlet extends HttpServlet {
                 req.getRequestDispatcher("views/positionMain.jsp").forward(req,resp);
             }
         }
-        else if (req.getParameter(PARAM_LIST)!=null) {
+        else if (req.getParameter(Params.LIST.getTitle())!=null) {
             List<Position> positions = this.iPositionService.getAll();
             req.setAttribute("positions", positions);
             req.getRequestDispatcher("views/positionList.jsp").forward(req, resp);
@@ -56,7 +53,7 @@ public class PositionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter(PARAM_NAME);
+        String name = req.getParameter(Params.NAME.getTitle());
         if(name!="") {
             long id = this.iPositionService.add(name);
             req.setAttribute("registration", "Должность " + name + " внесена в базу под номером " + id);
