@@ -1,9 +1,11 @@
 package controller.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controller.utils.Params;
 import model.Department;
 import model.Employer;
 import model.Position;
+import model.dto.EmployerParamsDTO;
 import service.DepartmentService;
 import service.EmployerService;
 import service.PositionService;
@@ -17,19 +19,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "EmployerServlet", urlPatterns = "/employer")
 public class EmployerServlet extends HttpServlet {
-    private static String PARAM_NAME = "name";
-    private static String PARAM_SALARY = "salary";
-    private static String PARAM_DEP = "department";
-    private static String PARAM_POS = "position";
-    private static String PARAM_ID = "id";
-    private static String PARAM_LIMIT = "limit";
-    private static String PARAM_PAGE = "page";
-
     private IEmployerService iEmployerService;
     private IDepartmentService iDepartmentService;
     private IPositionService iPositionService;
@@ -42,8 +35,8 @@ public class EmployerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getParameter(PARAM_ID) != null) {
-            String id = req.getParameter(PARAM_ID);
+        String id;
+        if ((id=req.getParameter(Params.ID.getTitle())) != null) {
             Employer employer = this.iEmployerService.get(Long.valueOf(id));
             if (employer!= null) {
                 req.setAttribute("employer", employer);
@@ -54,9 +47,10 @@ public class EmployerServlet extends HttpServlet {
                 req.setAttribute("departments", this.iDepartmentService.getAll());
                 req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
             }
-        } else if ((req.getParameter(PARAM_PAGE)) != null) {
-            String limitParam = req.getParameter(PARAM_LIMIT);
-            String pageParam = req.getParameter(PARAM_PAGE);
+        }
+        else if ((req.getParameter(Params.PAGE.getTitle())) != null) {
+            String limitParam = req.getParameter(Params.LIMIT.getTitle());
+            String pageParam = req.getParameter(Params.PAGE.getTitle());
             long limit = Long.parseLong(limitParam);
             long page = Long.parseLong(pageParam);
             List<Employer> limitEmployers =
@@ -67,7 +61,20 @@ public class EmployerServlet extends HttpServlet {
             req.setAttribute("page", page);
             req.setAttribute("pageCount", pageCount);
             req.getRequestDispatcher("views/employerList.jsp").forward(req, resp);
-        } else {
+        }
+        else if(req.getParameter(Params.SALARY_FROM.getTitle())!=null){
+            String name = req.getParameter(Params.NAME.getTitle());
+            String from = req.getParameter(Params.SALARY_FROM.getTitle());
+            String to = req.getParameter(Params.SALARY_TO.getTitle());
+            EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
+            employerParamsDTO.setName(name);
+            employerParamsDTO.setSalaryFrom(Double.valueOf(from));
+            employerParamsDTO.setSalaryTo(Double.valueOf(to));
+            List<Employer> employers = this.iEmployerService.find(employerParamsDTO);
+            req.setAttribute("employers",employers);
+            req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
+        }
+        else {
             req.setAttribute("positions", this.iPositionService.getAll());
             req.setAttribute("departments", this.iDepartmentService.getAll());
             req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
@@ -76,10 +83,10 @@ public class EmployerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter(PARAM_NAME);
-        String salary = req.getParameter(PARAM_SALARY);
-        String departmentId = req.getParameter(PARAM_DEP);
-        String positionId = req.getParameter(PARAM_POS);
+        String name = req.getParameter(Params.NAME.getTitle());
+        String salary = req.getParameter(Params.SALARY.getTitle());
+        String departmentId = req.getParameter(Params.DEPARTMENT.getTitle());
+        String positionId = req.getParameter(Params.POSITION.getTitle());
         if (name != "" && salary != null && departmentId != null && positionId != null) {
             long id = this.iEmployerService.add(name, Double.valueOf(salary), Long.valueOf(departmentId), Long.valueOf(positionId));
             req.setAttribute("registration","Сотрудник " + name + " успешно зарегистрирован под номером " + id);
