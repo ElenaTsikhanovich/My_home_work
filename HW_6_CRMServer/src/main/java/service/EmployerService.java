@@ -3,6 +3,7 @@ package service;
 import model.Department;
 import model.Employer;
 import model.Position;
+import model.dto.EmployerParamsDTO;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
 import service.api.IPositionService;
@@ -26,7 +27,6 @@ public class EmployerService implements IEmployerService {
       this.iEmployerStorage= EmployerStorage.getInstance();
       this.iDepartmentService=DepartmentService.getInstance();
       this.iPositionService=PositionService.getInstance();
-
     }
 
     public long add(String name, Double salary, Long depId, Long posId){
@@ -80,9 +80,9 @@ public class EmployerService implements IEmployerService {
         return id;
     }
 
-
-
-
-
-
+    @Override
+    public List<Employer> find(EmployerParamsDTO employerParamsDTO) {
+        List<Employer> employers = this.iEmployerStorage.find(employerParamsDTO);
+        return employers;
+    }
 }

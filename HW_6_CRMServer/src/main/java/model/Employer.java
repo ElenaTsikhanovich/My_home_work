@@ -1,10 +1,28 @@
 package model;
 
-public class Employer {
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "employers")
+public class Employer implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "salary")
     private Double salary;
+
+    @OneToOne
+    @JoinColumn(name = "department")
     private Department department;
+
+    @OneToOne
+    @JoinColumn(name = "position")
     private Position position;
 
     public Employer(){

@@ -6,13 +6,19 @@ import model.Employer;
 import model.Position;
 
 
+import model.dto.EmployerParamsDTO;
+import org.hibernate.Session;
 import service.DepartmentService;
 import service.PositionService;
 import service.api.IDepartmentService;
 import service.api.IPositionService;
 import storage.api.IEmployerStorage;
 import storage.utils.AppDataSource;
+import storage.utils.AppHibernate;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -148,5 +154,22 @@ public class EmployerStorage implements IEmployerStorage {
         return count;
     }
 
+    @Override
+    public List<Employer> find(EmployerParamsDTO employerParamsDTO) {
+        Session session = AppHibernate.getSessionFactory().openSession();
+        CriteriaBuilder criteriaBuilder = AppHibernate.getSessionFactory().createEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Employer> query = criteriaBuilder.createQuery(Employer.class);
 
+        Root<Employer>itemRoot = query.from(Employer.class);
+
+        query.where(criteriaBuilder.and(
+                criteriaBuilder.equal(itemRoot.get("name"),employerParamsDTO.getName()),
+                        criteriaBuilder.between(
+                                itemRoot.get("salary"),employerParamsDTO.getSalaryFrom(),employerParamsDTO.getSalaryTo())));
+
+        List<Employer> resultList = session.createQuery(query).getResultList();
+
+        session.close();
+        return resultList;
     }
+}

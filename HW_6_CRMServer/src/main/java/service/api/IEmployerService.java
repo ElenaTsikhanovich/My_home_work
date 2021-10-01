@@ -1,6 +1,7 @@
 package service.api;
 
 import model.Employer;
+import model.dto.EmployerParamsDTO;
 
 import java.util.List;
 
@@ -11,5 +12,7 @@ public interface IEmployerService {
     List<Employer> getAll();
     List<Employer> getLimit(long limit, long page);
     long getCount();
+    List<Employer> find(EmployerParamsDTO employerParamsDTO);
+
 
 }

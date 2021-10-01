@@ -1,8 +1,20 @@
 package model;
 
-public class Department {
+import javax.persistence.*;
+import java.io.Serializable;
+@Entity
+@Table(name = "departments")
+public class Department implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @OneToOne
+    @JoinColumn(name = "arent")
     private Department parent;
 
     public Department(){

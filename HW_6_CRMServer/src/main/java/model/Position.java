@@ -1,7 +1,17 @@
 package model;
 
-public class Position {
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "positions")
+public class Position implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "name")
     private String name;
 
     public Position(){
