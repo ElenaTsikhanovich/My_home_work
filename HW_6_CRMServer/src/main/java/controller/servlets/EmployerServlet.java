@@ -68,8 +68,8 @@ public class EmployerServlet extends HttpServlet {
             String to = req.getParameter(Params.SALARY_TO.getTitle());
             EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
             employerParamsDTO.setName(name);
-            employerParamsDTO.setSalaryFrom(Double.valueOf(from));
-            employerParamsDTO.setSalaryTo(Double.valueOf(to));
+            employerParamsDTO.setSalaryFrom(Double.valueOf(from)==null?0:Double.valueOf(from));
+            employerParamsDTO.setSalaryTo(Double.valueOf(to)==null?99999999.99:Double.valueOf(to));
             List<Employer> employers = this.iEmployerService.find(employerParamsDTO);
             req.setAttribute("employers",employers);
             req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
