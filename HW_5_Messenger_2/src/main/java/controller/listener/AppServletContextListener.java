@@ -33,7 +33,7 @@ public class AppServletContextListener implements ServletContextListener {static
         String message_storage = sce.getServletContext().getInitParameter("message_storage");
         StorageType storageTypeUser = StorageType.valueOf(user_storage.toUpperCase());
         StorageType storageTypeMessage = StorageType.valueOf(message_storage.toUpperCase());
-        UserStorageFactory.setType(StorageType.DATABASE);
+        UserStorageFactory.setType(storageTypeUser);
         MessageStorageFactory.setType(storageTypeMessage);
 
         String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd:MM:yyy в HH:mm"));
