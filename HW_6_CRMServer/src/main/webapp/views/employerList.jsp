@@ -16,10 +16,12 @@ pageEncoding="UTF-8"%>
 	<title>Список сотрудников</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/search" method="get">
-                 <input type="text" name="name" placeholder="имя"><br/>
-                 <input type="text" name="salaryFrom" placeholder="зарплата от"><br/>
-                 <input type="text" name="salaryTo" placeholder="зарплата до"><br/>
+<form action="${pageContext.request.contextPath}/employer" method="get">
+                 <input type="text" name="name" placeholder="имя">
+                 <input type="text" name="salaryFrom" placeholder="зарплата от">
+                 <input type="text" name="salaryTo" placeholder="зарплата до">
+                 <input type="hidden" name="page" value="1">
+                 <input type="hidden" name="limit" value="20">
                  <input type="submit" value="искать"/>
              </form>
 
@@ -30,10 +32,17 @@ pageEncoding="UTF-8"%>
    </c:forEach>
 </c:if>
 
-<c:if test="${requestScope.page != null}">
 <c:if test="${requestScope.page != 1}">
-    <a href="${pageContext.request.contextPath}/employer?limit=20&page=${requestScope.page-1}"><<</a>
+   <c:choose>
+      <c:when test="${requestScope.url != null}">
+         <a href="${pageContext.request.contextPath}/employer?limit=20&page=${requestScope.page-1}${requestScope.url}"><<</a>
+      </c:when>
+      <c:otherwise>
+          <a href="${pageContext.request.contextPath}/employer?limit=20&page=${requestScope.page-1}"><<</a>
+      </c:otherwise>
+   </c:choose>
 </c:if>
+
 <c:forEach begin="${page}" end="${page+10}" var="i">
 <c:if test="${i<=pageCount}">
      <c:choose>
@@ -41,14 +50,28 @@ pageEncoding="UTF-8"%>
             <td>${i}</td>
           </c:when>
           <c:otherwise>
-             <td><a href="${pageContext.request.contextPath}/employer?limit=20&page=${i}">${i}</a></td>
+             <c:choose>
+                 <c:when test="${requestScope.url != null}">
+                      <td><a href="${pageContext.request.contextPath}/employer?limit=20&page=${i}${requestScope.url}">${i}</a></td>
+                 </c:when>
+                 <c:otherwise>
+                      <td><a href="${pageContext.request.contextPath}/employer?limit=20&page=${i}">${i}</a></td>
+                 </c:otherwise>
+             </c:choose>
           </c:otherwise>
      </c:choose>
      </c:if>
 </c:forEach>
+
 <c:if test="${requestScope.page != pageCount}">
-    <a href="./employer?limit=20&page=${requestScope.page+1}">>></a>
-</c:if>
+<c:choose>
+      <c:when test="${requestScope.url != null}">
+         <a href="./employer?limit=20&page=${requestScope.page+1}${requestScope.url}">>></a>
+      </c:when>
+      <c:otherwise>
+         <a href="./employer?limit=20&page=${requestScope.page+1}">>></a>
+      </c:otherwise>
+   </c:choose>
 </c:if>
 
 <form action="${pageContext.request.contextPath}/employer" method="get">

@@ -2,8 +2,10 @@ package service;
 
 import model.Department;
 import service.api.IDepartmentService;
+import storage.DepartmentHibernateStorage;
 import storage.DepartmentStorage;
 import storage.api.IDepartmentStorage;
+import storage.utils.StorageFactory;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class DepartmentService implements IDepartmentService {
     }
 
     private DepartmentService(){
-        this.iDepartmentStorage= DepartmentStorage.getInstance();
+        this.iDepartmentStorage=StorageFactory.getDepartmentStorage();
     }
 
     public long add(String depName, Long parentId){

@@ -14,7 +14,7 @@ public class Department implements Serializable {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "arent")
+    @JoinColumn(name = "parent")
     private Department parent;
 
     public Department(){

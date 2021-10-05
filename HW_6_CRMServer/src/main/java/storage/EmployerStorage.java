@@ -7,18 +7,12 @@ import model.Position;
 
 
 import model.dto.EmployerParamsDTO;
-import org.hibernate.Session;
 import service.DepartmentService;
 import service.PositionService;
 import service.api.IDepartmentService;
 import service.api.IPositionService;
 import storage.api.IEmployerStorage;
 import storage.utils.AppDataSource;
-import storage.utils.AppHibernate;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -112,14 +106,14 @@ public class EmployerStorage implements IEmployerStorage {
         return allEmployers;
     }
 
-    public List<Employer> getLimit(long limit, long offset){
+    public List<Employer> getLimit(int limit, int offset){
         List<Employer> limitEmployers=new ArrayList<>();
         try (Connection connection = dataSource.getConnection();){
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT employers.id, " +
                     "employers.name, employers.salary, employers.department, employers.position " +
                     "FROM application.employers ORDER BY id ASC LIMIT ? OFFSET ?;")) {
-                preparedStatement.setLong(1,limit);
-                preparedStatement.setLong(2,offset);
+                preparedStatement.setInt(1,limit);
+                preparedStatement.setInt(2,offset);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()){
                     Employer employer = new Employer();
@@ -156,20 +150,52 @@ public class EmployerStorage implements IEmployerStorage {
 
     @Override
     public List<Employer> find(EmployerParamsDTO employerParamsDTO) {
-        Session session = AppHibernate.getSessionFactory().openSession();
-        CriteriaBuilder criteriaBuilder = AppHibernate.getSessionFactory().createEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Employer> query = criteriaBuilder.createQuery(Employer.class);
+        List<Employer> employers=new ArrayList<>();
+        try(Connection connection = dataSource.getConnection()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT " +
+                    "employers.id, employers.name, employers.salary, employers.department, employers.position " +
+                    "FROM application.employers " +
+                    "WHERE employers.name LIKE ? " +
+                    "AND employers.salary BETWEEN ? AND ?;")) {
+                preparedStatement.setString(1,employerParamsDTO.getName());
+                preparedStatement.setDouble(2,employerParamsDTO.getSalaryFrom());
+                preparedStatement.setDouble(3,employerParamsDTO.getSalaryTo());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()){
+                    Employer employer = new Employer();
+                    employer.setId(resultSet.getLong(1));
+                    employer.setName(resultSet.getString(2));
+                    employer.setSalary(resultSet.getDouble(3));
+                    employer.setDepartment(this.idepartmentService.get(resultSet.getLong(4)));
+                    employer.setPosition(this.ipositionService.get(resultSet.getLong(5)));
+                    employers.add(employer);
+                }
+            }
+        }catch (SQLException e){
+            throw new IllegalStateException("Ошибка работы с базой данных");
+        }
+        return employers;
+    }
 
-        Root<Employer>itemRoot = query.from(Employer.class);
+    @Override
+    public Long getCountFromFind(EmployerParamsDTO employerParamsDTO) {
+        long count=0;
+        try(Connection connection = dataSource.getConnection();) {
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(id) " +
+                    "FROM application.employers WHERE employers.name LIKE ? AND employers.salary BETWEEN ? AND ?;")){
+                preparedStatement.setString(1, employerParamsDTO.getName());
+                preparedStatement.setDouble(2,employerParamsDTO.getSalaryFrom());
+                preparedStatement.setDouble(3,employerParamsDTO.getSalaryTo());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    count = resultSet.getLong(1);
+                }
+            }
 
-        query.where(criteriaBuilder.and(
-                criteriaBuilder.equal(itemRoot.get("name"),employerParamsDTO.getName()),
-                        criteriaBuilder.between(
-                                itemRoot.get("salary"),employerParamsDTO.getSalaryFrom(),employerParamsDTO.getSalaryTo())));
-
-        List<Employer> resultList = session.createQuery(query).getResultList();
-
-        session.close();
-        return resultList;
+        }catch (SQLException e) {
+            throw new IllegalStateException("Ошибка работы с базой данных", e);
+        }
+        return count;
     }
 }
+

@@ -10,9 +10,9 @@ public interface IEmployerService {
     long add(String name, Double salary, Long depId, Long posId);
     Employer get(Long empId);
     List<Employer> getAll();
-    List<Employer> getLimit(long limit, long page);
+    List<Employer> getLimit(int limit, int page);
     long getCount();
     List<Employer> find(EmployerParamsDTO employerParamsDTO);
-
+    Long getCountFromFind(EmployerParamsDTO employerParamsDTO);
 
 }

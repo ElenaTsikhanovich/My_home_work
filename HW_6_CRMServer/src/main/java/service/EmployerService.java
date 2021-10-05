@@ -7,8 +7,10 @@ import model.dto.EmployerParamsDTO;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
 import service.api.IPositionService;
+import storage.EmployerHibernateStorage;
 import storage.EmployerStorage;
 import storage.api.IEmployerStorage;
+import storage.utils.StorageFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ public class EmployerService implements IEmployerService {
     }
 
     private EmployerService(){
-      this.iEmployerStorage= EmployerStorage.getInstance();
+      this.iEmployerStorage=StorageFactory.getEmployerStorage();
       this.iDepartmentService=DepartmentService.getInstance();
       this.iPositionService=PositionService.getInstance();
     }
@@ -41,7 +43,7 @@ public class EmployerService implements IEmployerService {
         if(position!=null) {
             employer.setPosition(position);
         }else throw new IllegalStateException("В базе данных нет должности с таким id");
-        final long id = this.iEmployerStorage.add(employer);
+        long id = this.iEmployerStorage.add(employer);
         return id;
     }
 
@@ -55,9 +57,9 @@ public class EmployerService implements IEmployerService {
         return allEmployers;
     }
 
-    public List<Employer> getLimit(long limit, long page){
-        long offset = (page-1)*limit;
-        final List<Employer> limitEmployer = this.iEmployerStorage.getLimit(limit, offset);
+    public List<Employer> getLimit(int limit, int page){
+        int offset = (page-1)*limit;
+        List<Employer> limitEmployer = this.iEmployerStorage.getLimit(limit, offset);
         return limitEmployer;
     }
 
@@ -65,7 +67,6 @@ public class EmployerService implements IEmployerService {
         long count = this.iEmployerStorage.getCount();
         return count;
     }
-
 
     public long add(Employer employer){
         Department department = this.iDepartmentService.get(employer.getDepartment().getId());
@@ -76,13 +77,22 @@ public class EmployerService implements IEmployerService {
         if(position!=null) {
             employer.setPosition(position);
         } else throw new IllegalStateException("В базе данных нет должности с таким id");
-        final long id = this.iEmployerStorage.add(employer);
+        long id = this.iEmployerStorage.add(employer);
         return id;
     }
 
     @Override
     public List<Employer> find(EmployerParamsDTO employerParamsDTO) {
+        int offset = (employerParamsDTO.getPage()-1)*employerParamsDTO.getLimit();
+        employerParamsDTO.setOffset(offset);
         List<Employer> employers = this.iEmployerStorage.find(employerParamsDTO);
         return employers;
     }
+
+    public Long getCountFromFind(EmployerParamsDTO employerParamsDTO){
+        Long countFromFind = this.iEmployerStorage.getCountFromFind(employerParamsDTO);
+        return countFromFind;
+
+    }
+
 }

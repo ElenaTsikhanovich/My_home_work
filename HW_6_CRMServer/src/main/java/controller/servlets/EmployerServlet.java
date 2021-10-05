@@ -1,10 +1,7 @@
 package controller.servlets;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import controller.utils.Params;
-import model.Department;
+import controller.servlets.utils.Params;
 import model.Employer;
-import model.Position;
 import model.dto.EmployerParamsDTO;
 import service.DepartmentService;
 import service.EmployerService;
@@ -12,7 +9,6 @@ import service.PositionService;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
 import service.api.IPositionService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,34 +43,37 @@ public class EmployerServlet extends HttpServlet {
                 req.setAttribute("departments", this.iDepartmentService.getAll());
                 req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
             }
-        }
-        else if ((req.getParameter(Params.PAGE.getTitle())) != null) {
+        } else if ((req.getParameter(Params.PAGE.getTitle())) != null) {
             String limitParam = req.getParameter(Params.LIMIT.getTitle());
             String pageParam = req.getParameter(Params.PAGE.getTitle());
-            long limit = Long.parseLong(limitParam);
-            long page = Long.parseLong(pageParam);
-            List<Employer> limitEmployers =
-                    this.iEmployerService.getLimit(limit, page);
-            long countOfEmployers = this.iEmployerService.getCount();
+            int limit = Integer.parseInt(limitParam);
+            int page = Integer.parseInt(pageParam);
+            List<Employer> employers;
+            long countOfEmployers;
+            if (req.getParameter(Params.SALARY_FROM.getTitle())!=null) {
+                String name = req.getParameter(Params.NAME.getTitle());
+                String from = req.getParameter(Params.SALARY_FROM.getTitle());
+                String to = req.getParameter(Params.SALARY_TO.getTitle());
+                EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
+                employerParamsDTO.setName(name);
+                employerParamsDTO.setSalaryFrom(from.equalsIgnoreCase("") ? 0 : Double.valueOf(from));
+                employerParamsDTO.setSalaryTo(to.equalsIgnoreCase("") ? 99999999.99 : Double.valueOf(to));
+                employerParamsDTO.setPage(page);
+                employerParamsDTO.setLimit(limit);
+                employers = this.iEmployerService.find(employerParamsDTO);
+                countOfEmployers=this.iEmployerService.getCountFromFind(employerParamsDTO);
+                String url="&name="+name+"&salaryFrom="+from+"&salaryTo="+to;
+                req.setAttribute("url",url);
+            }else {
+                employers = this.iEmployerService.getLimit(limit,page);
+                countOfEmployers = this.iEmployerService.getCount();
+            }
             long pageCount = (long) Math.ceil((double) countOfEmployers / limit);
-            req.setAttribute("employers", limitEmployers);
+            req.setAttribute("employers", employers);
             req.setAttribute("page", page);
             req.setAttribute("pageCount", pageCount);
             req.getRequestDispatcher("views/employerList.jsp").forward(req, resp);
-        }
-        else if(req.getParameter(Params.SALARY_FROM.getTitle())!=null){
-            String name = req.getParameter(Params.NAME.getTitle());
-            String from = req.getParameter(Params.SALARY_FROM.getTitle());
-            String to = req.getParameter(Params.SALARY_TO.getTitle());
-            EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
-            employerParamsDTO.setName(name);
-            employerParamsDTO.setSalaryFrom(Double.valueOf(from)==null?0:Double.valueOf(from));
-            employerParamsDTO.setSalaryTo(Double.valueOf(to)==null?99999999.99:Double.valueOf(to));
-            List<Employer> employers = this.iEmployerService.find(employerParamsDTO);
-            req.setAttribute("employers",employers);
-            req.getRequestDispatcher("views/employerList.jsp").forward(req,resp);
-        }
-        else {
+        }else {
             req.setAttribute("positions", this.iPositionService.getAll());
             req.setAttribute("departments", this.iDepartmentService.getAll());
             req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);

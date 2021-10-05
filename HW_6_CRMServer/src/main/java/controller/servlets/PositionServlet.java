@@ -1,26 +1,17 @@
 package controller.servlets;
 
-import controller.utils.Params;
-import model.Department;
-import model.Employer;
+import controller.servlets.utils.Params;
 import model.Position;
-
-import service.DepartmentService;
-import service.EmployerService;
 import service.PositionService;
 import service.api.IPositionService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
 
 @WebServlet(name = "PositionServlet", urlPatterns = "/position")
 public class PositionServlet extends HttpServlet {

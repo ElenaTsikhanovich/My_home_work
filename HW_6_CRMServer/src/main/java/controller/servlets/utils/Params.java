@@ -1,4 +1,4 @@
-package controller.utils;
+package controller.servlets.utils;
 
 public enum Params {
     NAME("name"),
