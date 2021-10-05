@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "EmployerServlet", urlPatterns = "/employer")
@@ -56,8 +57,8 @@ public class EmployerServlet extends HttpServlet {
                 String to = req.getParameter(Params.SALARY_TO.getTitle());
                 EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
                 employerParamsDTO.setName(name);
-                employerParamsDTO.setSalaryFrom(from.equalsIgnoreCase("") ? 0 : Double.valueOf(from));
-                employerParamsDTO.setSalaryTo(to.equalsIgnoreCase("") ? 99999999.99 : Double.valueOf(to));
+                employerParamsDTO.setSalaryFrom(from.equalsIgnoreCase("") ? 0 : Double.parseDouble(from));
+                employerParamsDTO.setSalaryTo(to.equalsIgnoreCase("") ? 99999999.99 : Double.parseDouble(to));
                 employerParamsDTO.setPage(page);
                 employerParamsDTO.setLimit(limit);
                 employers = this.iEmployerService.find(employerParamsDTO);
@@ -80,6 +81,7 @@ public class EmployerServlet extends HttpServlet {
         }
     }
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter(Params.NAME.getTitle());
@@ -96,8 +98,6 @@ public class EmployerServlet extends HttpServlet {
         req.setAttribute("departments", this.iDepartmentService.getAll());
         req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
         }
-
-
-    }
+}
 
 

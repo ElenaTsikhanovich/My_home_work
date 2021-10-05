@@ -125,7 +125,6 @@ public class EmployerHibernateStorage implements IEmployerStorage {
                 criteriaBuilder.like(itemRoot.get("name"), "%" + employerParamsDTO.getName() + "%"),
                 criteriaBuilder.between(
                         itemRoot.get("salary"), employerParamsDTO.getSalaryFrom(), employerParamsDTO.getSalaryTo())));
-
         Query<Long> query1 = session.createQuery(where);
         Long singleResult = query1.getSingleResult();
         session.getTransaction().commit();
