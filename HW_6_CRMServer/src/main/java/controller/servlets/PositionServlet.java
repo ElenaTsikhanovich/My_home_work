@@ -1,9 +1,11 @@
 package controller.servlets;
 
-import controller.servlets.utils.Params;
+import controller.utils.Params;
 import model.Position;
-import service.PositionService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.api.IPositionService;
+import utils.AppContext;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,10 +17,11 @@ import java.util.List;
 
 @WebServlet(name = "PositionServlet", urlPatterns = "/position")
 public class PositionServlet extends HttpServlet {
+    private ClassPathXmlApplicationContext context=AppContext.getContext();
     private IPositionService iPositionService;
 
     public PositionServlet(){
-        this.iPositionService=PositionService.getInstance();
+        this.iPositionService= context.getBean(IPositionService.class);
     }
 
     @Override

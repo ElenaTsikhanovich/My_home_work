@@ -11,7 +11,9 @@ import service.DepartmentService;
 import service.PositionService;
 import service.api.IDepartmentService;
 import service.api.IPositionService;
+import storage.api.IDepartmentStorage;
 import storage.api.IEmployerStorage;
+import storage.api.IPositionStorage;
 import storage.utils.AppDataSource;
 import javax.sql.DataSource;
 import java.sql.*;
@@ -20,18 +22,13 @@ import java.util.List;
 
 public class EmployerStorage implements IEmployerStorage {
     private DataSource dataSource;
-    private IDepartmentService idepartmentService;
-    private IPositionService ipositionService;
+    private IDepartmentStorage iDepartmentStorage;
+    private IPositionStorage iPositionStorage;
 
-    private static EmployerStorage instance=new EmployerStorage();
-    private EmployerStorage(){
-        this.dataSource=AppDataSource.getInstance();
-        this.idepartmentService=DepartmentService.getInstance();
-        this.ipositionService=PositionService.getInstance();
-    }
-
-    public static EmployerStorage getInstance() {
-        return instance;
+    public EmployerStorage(DataSource dataSource, IDepartmentStorage iDepartmentStorage, IPositionStorage iPositionStorage) {
+        this.dataSource = dataSource;
+        this.iDepartmentStorage = iDepartmentStorage;
+        this.iPositionStorage = iPositionStorage;
     }
 
     @Override
@@ -71,9 +68,9 @@ public class EmployerStorage implements IEmployerStorage {
                     employer.setId(resultSet.getLong(1));
                     employer.setName(resultSet.getString(2));
                     employer.setSalary(resultSet.getDouble(3));
-                    Department department = this.idepartmentService.get(resultSet.getLong(4));
+                    Department department = this.iDepartmentStorage.get(resultSet.getLong(4));
                     employer.setDepartment(department);
-                    Position position = this.ipositionService.get(resultSet.getLong(5));
+                    Position position = this.iPositionStorage.get(resultSet.getLong(5));
                     employer.setPosition(position);
                 }
             }
@@ -95,8 +92,8 @@ public class EmployerStorage implements IEmployerStorage {
                     employer.setId(resultSet.getLong(1));
                     employer.setName(resultSet.getString(2));
                     employer.setSalary(resultSet.getDouble(3));
-                    employer.setDepartment(this.idepartmentService.get(resultSet.getLong(4)));
-                    employer.setPosition(this.ipositionService.get(resultSet.getLong(5)));
+                    employer.setDepartment(this.iDepartmentStorage.get(resultSet.getLong(4)));
+                    employer.setPosition(this.iPositionStorage.get(resultSet.getLong(5)));
                     allEmployers.add(employer);
                 }
             }
@@ -120,8 +117,8 @@ public class EmployerStorage implements IEmployerStorage {
                     employer.setId(resultSet.getLong(1));
                     employer.setName(resultSet.getString(2));
                     employer.setSalary(resultSet.getDouble(3));
-                    employer.setDepartment(this.idepartmentService.get(resultSet.getLong(4)));
-                    employer.setPosition(this.ipositionService.get(resultSet.getLong(5)));
+                    employer.setDepartment(this.iDepartmentStorage.get(resultSet.getLong(4)));
+                    employer.setPosition(this.iPositionStorage.get(resultSet.getLong(5)));
                     limitEmployers.add(employer);
                 }
             }
@@ -166,8 +163,8 @@ public class EmployerStorage implements IEmployerStorage {
                     employer.setId(resultSet.getLong(1));
                     employer.setName(resultSet.getString(2));
                     employer.setSalary(resultSet.getDouble(3));
-                    employer.setDepartment(this.idepartmentService.get(resultSet.getLong(4)));
-                    employer.setPosition(this.ipositionService.get(resultSet.getLong(5)));
+                    employer.setDepartment(this.iDepartmentStorage.get(resultSet.getLong(4)));
+                    employer.setPosition(this.iPositionStorage.get(resultSet.getLong(5)));
                     employers.add(employer);
                 }
             }

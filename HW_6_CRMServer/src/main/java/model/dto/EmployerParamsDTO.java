@@ -1,5 +1,5 @@
 package model.dto;
-//добавить главный класс с пэийдж и фильтр остальные фильтры наследуются
+//добавить главный класс с пэийдж и фильтр остальные фильтры наследуются и добавляются нужные поля для поиска
 public class EmployerParamsDTO {
     private String name;
     private Double salaryFrom;

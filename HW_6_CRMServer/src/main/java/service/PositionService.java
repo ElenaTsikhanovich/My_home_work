@@ -2,22 +2,15 @@ package service;
 
 import model.Position;
 import service.api.IPositionService;
-import storage.PositionHibernateStorage;
-import storage.PositionStorage;
 import storage.api.IPositionStorage;
-import storage.utils.StorageFactory;
 
 import java.util.List;
 
 public class PositionService implements IPositionService {
-    private static PositionService instance=new PositionService();
     private IPositionStorage iPositionStorage;
 
-    public static PositionService getInstance() {
-        return instance;
-    }
-    private PositionService(){
-        this.iPositionStorage=StorageFactory.getPositionStorage();
+    public PositionService(IPositionStorage iPositionStorage) {
+        this.iPositionStorage = iPositionStorage;
     }
 
     @Override

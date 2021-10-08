@@ -10,25 +10,17 @@ import service.api.IPositionService;
 import storage.EmployerHibernateStorage;
 import storage.EmployerStorage;
 import storage.api.IEmployerStorage;
-import storage.utils.StorageFactory;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmployerService implements IEmployerService {
-    private static EmployerService instance=new EmployerService();
-    private IEmployerStorage iEmployerStorage;
-    private IDepartmentService iDepartmentService;
-    private IPositionService iPositionService;
+    private final IEmployerStorage iEmployerStorage;
+    private final IDepartmentService iDepartmentService;
+    private final IPositionService iPositionService;
 
-    public static EmployerService getInstance() {
-        return instance;
-    }
-
-    private EmployerService(){
-      this.iEmployerStorage=StorageFactory.getEmployerStorage();
-      this.iDepartmentService=DepartmentService.getInstance();
-      this.iPositionService=PositionService.getInstance();
+    public EmployerService(IEmployerStorage iEmployerStorage, IDepartmentService iDepartmentService, IPositionService iPositionService) {
+        this.iEmployerStorage = iEmployerStorage;
+        this.iDepartmentService = iDepartmentService;
+        this.iPositionService = iPositionService;
     }
 
     public long add(String name, Double salary, Long depId, Long posId){

@@ -13,15 +13,10 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class DepartmentHibernateStorage implements IDepartmentStorage {
-    private SessionFactory sessionFactory;
-    private static DepartmentHibernateStorage instance=new DepartmentHibernateStorage();
+    private final SessionFactory sessionFactory;
 
-    private DepartmentHibernateStorage(){
-        this.sessionFactory=AppHibernate.getSessionFactory();
-    }
-
-    public static DepartmentHibernateStorage getInstance() {
-        return instance;
+    public DepartmentHibernateStorage(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -58,4 +53,7 @@ public class DepartmentHibernateStorage implements IDepartmentStorage {
         session.close();
         return resultList;
     }
+
 }
+
+

@@ -15,15 +15,10 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class PositionHibernateStorage implements IPositionStorage {
-    private SessionFactory sessionFactory;
-    private static PositionHibernateStorage instance=new PositionHibernateStorage();
+    private final SessionFactory sessionFactory;
 
-    private PositionHibernateStorage(){
-        this.sessionFactory=AppHibernate.getSessionFactory();
-    }
-
-    public static PositionHibernateStorage getInstance() {
-        return instance;
+    public PositionHibernateStorage(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override

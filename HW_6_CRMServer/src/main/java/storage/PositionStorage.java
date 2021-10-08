@@ -12,13 +12,9 @@ import java.util.List;
 
 public class PositionStorage implements IPositionStorage {
     private DataSource dataSource;
-    private static PositionStorage instance = new PositionStorage();
-    private PositionStorage(){
-        this.dataSource=AppDataSource.getInstance();
-    }
 
-    public static PositionStorage getInstance() {
-        return instance;
+    public PositionStorage(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override

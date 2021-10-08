@@ -14,15 +14,10 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class EmployerHibernateStorage implements IEmployerStorage {
-    private SessionFactory sessionFactory;
-    private static EmployerHibernateStorage instance=new EmployerHibernateStorage();
+    private final SessionFactory sessionFactory;
 
-    private EmployerHibernateStorage(){
-        this.sessionFactory=AppHibernate.getSessionFactory();
-    }
-
-    public static EmployerHibernateStorage getInstance() {
-        return instance;
+    public EmployerHibernateStorage(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override

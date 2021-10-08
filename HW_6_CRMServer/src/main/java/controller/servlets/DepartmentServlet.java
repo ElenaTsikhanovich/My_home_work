@@ -1,9 +1,11 @@
 package controller.servlets;
 
-import controller.servlets.utils.Params;
+import controller.utils.Params;
 import model.Department;
-import service.DepartmentService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.api.IDepartmentService;
+import utils.AppContext;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +16,11 @@ import java.util.List;
 
 @WebServlet(name = "DepartmentServlet", urlPatterns = "/department")
 public class DepartmentServlet extends HttpServlet {
+    private ClassPathXmlApplicationContext context= AppContext.getContext();
     private IDepartmentService iDepartmentService;
 
     public DepartmentServlet(){
-        this.iDepartmentService=DepartmentService.getInstance();
+        this.iDepartmentService=context.getBean(IDepartmentService.class);
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

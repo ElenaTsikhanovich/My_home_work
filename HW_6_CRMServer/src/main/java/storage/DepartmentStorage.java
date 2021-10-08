@@ -13,13 +13,9 @@ import java.util.List;
 
 public class DepartmentStorage implements IDepartmentStorage {
     private DataSource dataSource;
-    private static DepartmentStorage instance =new DepartmentStorage();
-    private DepartmentStorage(){
-        this.dataSource=AppDataSource.getInstance();
-    }
 
-    public static DepartmentStorage getInstance() {
-        return instance;
+    public DepartmentStorage(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override

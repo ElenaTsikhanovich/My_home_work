@@ -1,33 +1,33 @@
 package controller.servlets;
 
-import controller.servlets.utils.Params;
+import controller.utils.Params;
 import model.Employer;
 import model.dto.EmployerParamsDTO;
-import service.DepartmentService;
-import service.EmployerService;
-import service.PositionService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
 import service.api.IPositionService;
+import utils.AppContext;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "EmployerServlet", urlPatterns = "/employer")
 public class EmployerServlet extends HttpServlet {
+    private ClassPathXmlApplicationContext context= AppContext.getContext();
     private IEmployerService iEmployerService;
     private IDepartmentService iDepartmentService;
     private IPositionService iPositionService;
 
     public EmployerServlet() {
-        this.iEmployerService = EmployerService.getInstance();
-        this.iDepartmentService = DepartmentService.getInstance();
-        this.iPositionService = PositionService.getInstance();
+        this.iEmployerService=context.getBean(IEmployerService.class);
+        this.iDepartmentService=context.getBean(IDepartmentService.class);
+        this.iPositionService=context.getBean(IPositionService.class);
     }
 
     @Override
