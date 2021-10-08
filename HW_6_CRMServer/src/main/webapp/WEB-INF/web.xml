@@ -11,10 +11,11 @@
         <welcome-file>/views/index.jsp</welcome-file>
     </welcome-file-list>
 
-    <context-param>
+   <!-- <context-param>
         <param-name>storage</param-name>
         <param-value>HIBERNATE</param-value>
     </context-param>
+    -->
 
 
 </web-app>

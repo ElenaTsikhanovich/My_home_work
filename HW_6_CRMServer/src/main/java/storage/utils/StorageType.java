@@ -1,6 +1,8 @@
-package storage.utils;
+/*package storage.utils;
 
 public enum StorageType {
     JDBC,
     HIBERNATE
 }
+
+ */

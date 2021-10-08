@@ -1,4 +1,4 @@
-package storage.utils;
+/*package storage.utils;
 
 import storage.*;
 import storage.api.IDepartmentStorage;
@@ -58,3 +58,5 @@ public class StorageFactory {
                 }
     }
 }
+
+ */
