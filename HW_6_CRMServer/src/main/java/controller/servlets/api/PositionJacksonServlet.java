@@ -2,8 +2,10 @@ package controller.servlets.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Position;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.PositionService;
 import service.api.IPositionService;
+import utils.AppContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,10 +18,11 @@ import java.net.URLEncoder;
 @WebServlet(name = "PositionJacksonServlet", urlPatterns = "/position_api")
 public class PositionJacksonServlet extends HttpServlet {
     private ObjectMapper objectMapper=new ObjectMapper();
+    private ClassPathXmlApplicationContext context= AppContext.getContext();
     private IPositionService iPositionService;
 
     public PositionJacksonServlet(){
-        this.iPositionService= PositionService.getInstance();
+       this.iPositionService= context.getBean(IPositionService.class);
     }
 
     @Override
