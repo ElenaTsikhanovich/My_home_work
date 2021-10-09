@@ -2,6 +2,7 @@ package controller.servlets.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Department;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.DepartmentService;
 import service.api.IDepartmentService;
@@ -18,7 +19,7 @@ import java.net.URLEncoder;
 @WebServlet(name = "DepartmentJacksonServlet ",urlPatterns = "/department_api")
 public class DepartmentJacksonServlet extends HttpServlet {
     private ObjectMapper objectMapper=new ObjectMapper();
-    private ClassPathXmlApplicationContext context= AppContext.getContext();
+    private ApplicationContext context= AppContext.getContext();
     private IDepartmentService iDepartmentService;
 
     public DepartmentJacksonServlet(){

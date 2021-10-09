@@ -3,6 +3,7 @@ package controller.servlets;
 import controller.utils.Params;
 import model.Employer;
 import model.dto.EmployerParamsDTO;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @WebServlet(name = "EmployerServlet", urlPatterns = "/employer")
 public class EmployerServlet extends HttpServlet {
-    private ClassPathXmlApplicationContext context= AppContext.getContext();
+    private ApplicationContext context= AppContext.getContext();
     private IEmployerService iEmployerService;
     private IDepartmentService iDepartmentService;
     private IPositionService iPositionService;

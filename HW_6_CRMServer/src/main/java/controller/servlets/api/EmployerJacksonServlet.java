@@ -2,6 +2,7 @@ package controller.servlets.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Employer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.EmployerService;
 import service.api.IDepartmentService;
@@ -19,7 +20,7 @@ import java.net.URLEncoder;
 @WebServlet(name = "EmployerJacksonServlet", urlPatterns = "/employer_api")
 public class EmployerJacksonServlet extends HttpServlet {
     private ObjectMapper objectMapper=new ObjectMapper();
-    private ClassPathXmlApplicationContext context= AppContext.getContext();
+    private ApplicationContext context= AppContext.getContext();
     private IEmployerService iEmployerService;
 
     public EmployerJacksonServlet(){

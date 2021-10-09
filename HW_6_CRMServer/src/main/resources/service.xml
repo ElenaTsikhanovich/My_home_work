@@ -4,6 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <import resource="daos.xml"/>
+
     <bean id="employerService" class="service.EmployerService">
         <constructor-arg ref="employerStorage"/>
         <constructor-arg ref="departmentService"/>

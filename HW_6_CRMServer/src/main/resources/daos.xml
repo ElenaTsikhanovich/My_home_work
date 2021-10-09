@@ -12,9 +12,11 @@
         для dataSource
         -->
     </bean>
+
     <bean id="departmentStorage" class="storage.DepartmentHibernateStorage">
         <constructor-arg ref="sessionFactory"/>
     </bean>
+
     <bean id="positionStorage" class="storage.PositionHibernateStorage">
         <constructor-arg ref="sessionFactory"/>
     </bean>

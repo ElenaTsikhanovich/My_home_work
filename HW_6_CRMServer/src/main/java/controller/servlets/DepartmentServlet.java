@@ -2,6 +2,7 @@ package controller.servlets;
 
 import controller.utils.Params;
 import model.Department;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.api.IDepartmentService;
 import utils.AppContext;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @WebServlet(name = "DepartmentServlet", urlPatterns = "/department")
 public class DepartmentServlet extends HttpServlet {
-    private ClassPathXmlApplicationContext context= AppContext.getContext();
+    private ApplicationContext context= AppContext.getContext();
     private IDepartmentService iDepartmentService;
 
     public DepartmentServlet(){

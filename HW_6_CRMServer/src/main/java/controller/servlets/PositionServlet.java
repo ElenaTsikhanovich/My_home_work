@@ -2,6 +2,7 @@ package controller.servlets;
 
 import controller.utils.Params;
 import model.Position;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.api.IPositionService;
 import utils.AppContext;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @WebServlet(name = "PositionServlet", urlPatterns = "/position")
 public class PositionServlet extends HttpServlet {
-    private ClassPathXmlApplicationContext context=AppContext.getContext();
+    private ApplicationContext context=AppContext.getContext();
     private IPositionService iPositionService;
 
     public PositionServlet(){
