@@ -4,12 +4,10 @@ import controller.utils.Params;
 import model.Employer;
 import model.dto.EmployerParamsDTO;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
 import service.api.IPositionService;
 import utils.AppContext;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,48 +31,14 @@ public class EmployerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id;
-        if ((id=req.getParameter(Params.ID.getTitle())) != null) {
-            Employer employer = this.iEmployerService.get(Long.valueOf(id));
-            if (employer!= null) {
-                req.setAttribute("employer", employer);
-                req.getRequestDispatcher("views/employer.jsp").forward(req, resp);
-            } else {
-                req.setAttribute("exception", "Сотрудника с таким id нет в базе данных");
-                req.setAttribute("positions", this.iPositionService.getAll());
-                req.setAttribute("departments", this.iDepartmentService.getAll());
-                req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
-            }
-        } else if ((req.getParameter(Params.PAGE.getTitle())) != null) {
-            String limitParam = req.getParameter(Params.LIMIT.getTitle());
-            String pageParam = req.getParameter(Params.PAGE.getTitle());
-            int limit = Integer.parseInt(limitParam);
-            int page = Integer.parseInt(pageParam);
-            List<Employer> employers;
-            long countOfEmployers;
-            if (req.getParameter(Params.SALARY_FROM.getTitle())!=null) {
-                String name = req.getParameter(Params.NAME.getTitle());
-                String from = req.getParameter(Params.SALARY_FROM.getTitle());
-                String to = req.getParameter(Params.SALARY_TO.getTitle());
-                EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
-                employerParamsDTO.setName(name);
-                employerParamsDTO.setSalaryFrom(from.equalsIgnoreCase("") ? 0 : Double.parseDouble(from));
-                employerParamsDTO.setSalaryTo(to.equalsIgnoreCase("") ? 99999999.99 : Double.parseDouble(to));
-                employerParamsDTO.setPage(page);
-                employerParamsDTO.setLimit(limit);
-                employers = this.iEmployerService.find(employerParamsDTO);
-                countOfEmployers=this.iEmployerService.getCountFromFind(employerParamsDTO);
-                String url="&name="+name+"&salaryFrom="+from+"&salaryTo="+to;
-                req.setAttribute("url",url);
-            }else {
-                employers = this.iEmployerService.getLimit(limit,page);
-                countOfEmployers = this.iEmployerService.getCount();
-            }
-            long pageCount = (long) Math.ceil((double) countOfEmployers / limit);
-            req.setAttribute("employers", employers);
-            req.setAttribute("page", page);
-            req.setAttribute("pageCount", pageCount);
-            req.getRequestDispatcher("views/employerList.jsp").forward(req, resp);
+        if(req.getParameter(Params.ID.getTitle())!=null){
+            byId(req, resp);
+
+        }else if (req.getParameter(Params.PAGE.getTitle())!=null && req.getParameter(Params.SALARY_TO.getTitle())==null){
+            paginationAll(req, resp);
+
+        } else if(req.getParameter(Params.PAGE.getTitle())!=null && req.getParameter(Params.SALARY_TO.getTitle())!=null){
+            paginationByNameAndSalary(req, resp);
         }else {
             req.setAttribute("positions", this.iPositionService.getAll());
             req.setAttribute("departments", this.iDepartmentService.getAll());
@@ -99,6 +63,57 @@ public class EmployerServlet extends HttpServlet {
         req.setAttribute("departments", this.iDepartmentService.getAll());
         req.getRequestDispatcher("views/employerMain.jsp").forward(req, resp);
         }
+
+
+        private void byId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            String id = request.getParameter(Params.ID.getTitle());
+            Employer employer = this.iEmployerService.get(Long.valueOf(id));
+            if (employer != null) {
+                request.setAttribute("employer", employer);
+                request.getRequestDispatcher("views/employer.jsp").forward(request, response);
+            } else {
+                request.setAttribute("exception", "Сотрудника с таким id нет в базе данных");
+                request.setAttribute("positions", this.iPositionService.getAll());
+                request.setAttribute("departments", this.iDepartmentService.getAll());
+                request.getRequestDispatcher("views/employerMain.jsp").forward(request, response);
+            }
+        }
+
+        private void paginationAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            String page = request.getParameter(Params.PAGE.getTitle());
+            String limit = request.getParameter(Params.LIMIT.getTitle());
+            List<Employer> employers=this.iEmployerService.getLimit(Integer.parseInt(limit),Integer.parseInt(page));
+            Long countOfEmployers = this.iEmployerService.getCount();
+            long pageCount = (long) Math.ceil((double) countOfEmployers / Long.parseLong(limit));
+            request.setAttribute("employers", employers);
+            request.setAttribute("page", page);
+            request.setAttribute("pageCount", pageCount);
+            request.getRequestDispatcher("views/employerList.jsp").forward(request, response);
+        }
+
+        private void paginationByNameAndSalary(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+            String page = request.getParameter(Params.PAGE.getTitle());
+            String limit = request.getParameter(Params.LIMIT.getTitle());
+            String name = request.getParameter(Params.NAME.getTitle());
+            String from = request.getParameter(Params.SALARY_FROM.getTitle());
+            String to = request.getParameter(Params.SALARY_TO.getTitle());
+            EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
+            employerParamsDTO.setName(name);
+            employerParamsDTO.setSalaryFrom(from.equalsIgnoreCase("") ? 0 : Double.parseDouble(from));
+            employerParamsDTO.setSalaryTo(to.equalsIgnoreCase("") ? 99999999.99 : Double.parseDouble(to));
+            employerParamsDTO.setPage(Integer.parseInt(page));
+            employerParamsDTO.setLimit(Integer.parseInt(limit));
+            List<Employer>employers = this.iEmployerService.find(employerParamsDTO);
+            Long countOfEmployers=this.iEmployerService.getCountFromFind(employerParamsDTO);
+            long pageCount = (long) Math.ceil((double) countOfEmployers / Long.parseLong(limit));
+            String url="&name="+name+"&salaryFrom="+from+"&salaryTo="+to;
+            request.setAttribute("url",url);
+            request.setAttribute("employers", employers);
+            request.setAttribute("page", page);
+            request.setAttribute("pageCount", pageCount);
+            request.getRequestDispatcher("views/employerList.jsp").forward(request, response);
+        }
+
 }
 
 

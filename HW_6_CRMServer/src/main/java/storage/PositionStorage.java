@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PositionStorage implements IPositionStorage {
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public PositionStorage(DataSource dataSource) {
         this.dataSource = dataSource;

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployerStorage implements IEmployerStorage {
-    private DataSource dataSource;
+    private final DataSource dataSource;
     private IDepartmentStorage iDepartmentStorage;
     private IPositionStorage iPositionStorage;
 

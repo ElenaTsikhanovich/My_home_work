@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DepartmentStorage implements IDepartmentStorage {
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public DepartmentStorage(DataSource dataSource) {
         this.dataSource = dataSource;

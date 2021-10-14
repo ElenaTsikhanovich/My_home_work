@@ -25,16 +25,8 @@ public class DepartmentServlet extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id;
-        if((id=req.getParameter(Params.ID.getTitle()))!=null) {
-            Department department = this.iDepartmentService.get(Long.valueOf(id));
-            if(department!=null) {
-                req.setAttribute("department", department);
-                req.getRequestDispatcher("views/department.jsp").forward(req, resp);
-            } else {
-                req.setAttribute("exception","Отдела с таким id нет в базе данных");
-                req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
-            }
+       if(req.getParameter(Params.ID.getTitle())!=null){
+           byId(req, resp);
         } else {
             List<Department> departments = this.iDepartmentService.getAll();
             req.setAttribute("departments",departments);
@@ -57,5 +49,17 @@ public class DepartmentServlet extends HttpServlet {
             req.setAttribute("registration", "Заполните все поля для регистрации");
         }
         req.getRequestDispatcher("views/departmentMain.jsp").forward(req,resp);
+    }
+
+    private void byId(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter(Params.ID.getTitle());
+        Department department = this.iDepartmentService.get(Long.valueOf(id));
+        if(department!=null) {
+            request.setAttribute("department", department);
+            request.getRequestDispatcher("views/department.jsp").forward(request, response);
+        } else {
+            request.setAttribute("exception","Отдела с таким id нет в базе данных");
+            request.getRequestDispatcher("views/departmentMain.jsp").forward(request,response);
+        }
     }
 }
