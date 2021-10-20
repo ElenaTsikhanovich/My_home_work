@@ -2,30 +2,44 @@ package controller.servlets.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Department;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import service.DepartmentService;
+import model.Employer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import service.api.IDepartmentService;
-import utils.AppContext;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLEncoder;
+@RestController
+@RequestMapping("/departments")
+public class DepartmentJacksonServlet {
 
-@WebServlet(name = "DepartmentJacksonServlet ",urlPatterns = "/department_api")
-public class DepartmentJacksonServlet extends HttpServlet {
-    private ObjectMapper objectMapper=new ObjectMapper();
-    private ApplicationContext context= AppContext.getContext();
     private IDepartmentService iDepartmentService;
 
-    public DepartmentJacksonServlet(){
-        this.iDepartmentService=context.getBean(IDepartmentService.class);
+    public DepartmentJacksonServlet(IDepartmentService iDepartmentService) {
+        this.iDepartmentService = iDepartmentService;
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> add(@RequestBody Department body){
+       Department department=body;
+       return new ResponseEntity<>(this.iDepartmentService.add(department),HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity<?> get(@PathVariable("id")Long depId){
+        return new ResponseEntity<>(this.iDepartmentService.get(depId), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(this.iDepartmentService.getAll(),HttpStatus.OK);
+    }
+
+
+
+
+
+
+    /*
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("registration",req.getParameter("registration"));
@@ -39,4 +53,6 @@ public class DepartmentJacksonServlet extends HttpServlet {
         String registration=department.getName() + " внесен в базу под номером " + id;
         resp.sendRedirect(req.getContextPath()+"/department_api?registration="+ URLEncoder.encode(registration,"UTF-8"));
     }
+
+     */
 }
