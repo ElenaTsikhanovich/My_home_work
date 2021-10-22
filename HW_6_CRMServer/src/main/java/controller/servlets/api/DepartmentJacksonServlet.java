@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import service.api.IDepartmentService;
 
 @RestController
-@RequestMapping("/departments")
+@RequestMapping("/api/departments")
 public class DepartmentJacksonServlet {
 
     private IDepartmentService iDepartmentService;
@@ -19,19 +19,18 @@ public class DepartmentJacksonServlet {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> add(@RequestBody Department body){
-       Department department=body;
-       return new ResponseEntity<>(this.iDepartmentService.add(department),HttpStatus.CREATED);
+    public ResponseEntity<?> add(@RequestBody Department department){
+       return new ResponseEntity<>(iDepartmentService.add(department),HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<?> get(@PathVariable("id")Long depId){
-        return new ResponseEntity<>(this.iDepartmentService.get(depId), HttpStatus.OK);
+        return new ResponseEntity<>(iDepartmentService.get(depId), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAll(){
-        return new ResponseEntity<>(this.iDepartmentService.getAll(),HttpStatus.OK);
+        return new ResponseEntity<>(iDepartmentService.getAll(),HttpStatus.OK);
     }
 
 

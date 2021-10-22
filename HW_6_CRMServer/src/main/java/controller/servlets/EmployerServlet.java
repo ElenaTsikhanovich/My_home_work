@@ -1,33 +1,113 @@
 package controller.servlets;
 
-import controller.utils.Params;
+
+import model.Department;
 import model.Employer;
+import model.Position;
 import model.dto.EmployerParamsDTO;
-import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
 import service.api.IPositionService;
-import utils.AppContext;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "EmployerServlet", urlPatterns = "/employer")
-public class EmployerServlet extends HttpServlet {
-    private ApplicationContext context= AppContext.getContext();
+
+@Controller
+@RequestMapping("/employer")
+public class EmployerServlet{
+
     private IEmployerService iEmployerService;
     private IDepartmentService iDepartmentService;
     private IPositionService iPositionService;
 
-    public EmployerServlet() {
-        this.iEmployerService=context.getBean(IEmployerService.class);
-        this.iDepartmentService=context.getBean(IDepartmentService.class);
-        this.iPositionService=context.getBean(IPositionService.class);
+    public EmployerServlet(IEmployerService iEmployerService, IDepartmentService iDepartmentService, IPositionService iPositionService) {
+        this.iEmployerService = iEmployerService;
+        this.iDepartmentService = iDepartmentService;
+        this.iPositionService = iPositionService;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/id")
+    public String get(Model model,
+                      @RequestParam("id")Long id){
+        Employer employer = iEmployerService.get(id);
+        if (employer!=null){
+            model.addAttribute("employer",employer);
+            return "employer";
+        }else {
+            model.addAttribute("exception","Отдела с таким id нет в базе данных");
+            List<Department> departments = iDepartmentService.getAll();
+            model.addAttribute("departments",departments);
+            List<Position> positions = iPositionService.getAll();
+            model.addAttribute("positions",positions);
+            return "employerMain";
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/limit")
+    public String getAllWithPagination(Model model,
+            @RequestParam("page")Integer page,
+            @RequestParam("limit")Integer limit){
+        List<Employer> employers = iEmployerService.getLimit(limit, page);
+        Long countOfEmployers = iEmployerService.getCount();
+        long pageCount = (long) Math.ceil((double) countOfEmployers /limit);
+        model.addAttribute("employers", employers);
+        model.addAttribute("page", page);
+        model.addAttribute("pageCount", pageCount);
+        return "employerList";
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET,value ="/search")
+    public String getWithSearch(Model model,
+            @RequestParam("page")Integer page,
+            @RequestParam("limit")Integer limit,
+            @RequestParam("name")String name,
+            @RequestParam("salaryFrom") String salaryFrom,
+            @RequestParam("salaryTo") String salaryTo){
+        EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
+        employerParamsDTO.setPage(page);
+        employerParamsDTO.setLimit(limit);
+        employerParamsDTO.setName(name);
+        employerParamsDTO.setSalaryFrom(salaryFrom.equalsIgnoreCase("")?0:Double.parseDouble(salaryFrom));
+        employerParamsDTO.setSalaryTo(salaryTo.equalsIgnoreCase("")?99999999.99:Double.parseDouble(salaryTo));
+        List<Employer> employers = iEmployerService.find(employerParamsDTO);
+        Long countFromFind = iEmployerService.getCountFromFind(employerParamsDTO);
+        long pageCount = (long) Math.ceil((double) countFromFind /limit);
+        String url="&name="+name+"&salaryFrom="+salaryFrom+"&salaryTo="+salaryTo;
+        model.addAttribute("url",url);
+        model.addAttribute("employers", employers);
+        model.addAttribute("page", page);
+        model.addAttribute("pageCount", pageCount);
+        return "employerList";
+
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String getMain(Model model){
+        List<Department> departments = iDepartmentService.getAll();
+        model.addAttribute("departments",departments);
+        List<Position> positions = iPositionService.getAll();
+        model.addAttribute("positions",positions);
+        return "employerMain";
+    }
+
+
+
+
+
+
+
+
+
+
+
+   /*
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -113,6 +193,8 @@ public class EmployerServlet extends HttpServlet {
             request.setAttribute("pageCount", pageCount);
             request.getRequestDispatcher("views/employerList.jsp").forward(request, response);
         }
+
+     */
 
 }
 

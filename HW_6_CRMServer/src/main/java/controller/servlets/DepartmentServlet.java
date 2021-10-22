@@ -4,6 +4,11 @@ import controller.utils.Params;
 import model.Department;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import service.api.IDepartmentService;
 import utils.AppContext;
 
@@ -15,14 +20,55 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "DepartmentServlet", urlPatterns = "/department")
-public class DepartmentServlet extends HttpServlet {
-    private ApplicationContext context= AppContext.getContext();
+@Controller
+@RequestMapping("/department")
+public class DepartmentServlet {
+
     private IDepartmentService iDepartmentService;
 
-    public DepartmentServlet(){
-        this.iDepartmentService=context.getBean(IDepartmentService.class);
+    public DepartmentServlet(IDepartmentService iDepartmentService) {
+        this.iDepartmentService = iDepartmentService;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/id")
+    public String get(Model model,
+                      @RequestParam("id")Long id){
+        Department department = iDepartmentService.get(id);
+        if (department!=null){
+            model.addAttribute("department",department);
+            return "department";
+        }else {
+            model.addAttribute("exception","Отдела с таким id нет в базе данных");
+            List<Department> departments = iDepartmentService.getAll();
+            model.addAttribute("departments",departments);
+            return "departmentMain";
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/list")
+    public String getAll(Model model){
+            List<Department> departments = iDepartmentService.getAll();
+            model.addAttribute("departments",departments);
+            if(departments!=null){
+                return "departmentList";
+            } else return "departmentMain";
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String getMain(Model model){
+        List<Department> departments = iDepartmentService.getAll();
+        model.addAttribute("departments",departments);
+        return "departmentMain";
+    }
+
+
+
+
+
+
+
+
+    /*
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        if(req.getParameter(Params.ID.getTitle())!=null){
@@ -62,4 +108,6 @@ public class DepartmentServlet extends HttpServlet {
             request.getRequestDispatcher("views/departmentMain.jsp").forward(request,response);
         }
     }
+
+     */
 }

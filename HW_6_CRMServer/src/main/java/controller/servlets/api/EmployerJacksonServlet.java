@@ -1,31 +1,54 @@
 package controller.servlets.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Employer;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import service.EmployerService;
-import service.api.IDepartmentService;
+import model.dto.EmployerParamsDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import service.api.IEmployerService;
-import utils.AppContext;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLEncoder;
+@RestController
+@RequestMapping("/api/employers")
+public class EmployerJacksonServlet {
 
-@WebServlet(name = "EmployerJacksonServlet", urlPatterns = "/employer_api")
-public class EmployerJacksonServlet extends HttpServlet {
-    private ObjectMapper objectMapper=new ObjectMapper();
-    private ApplicationContext context= AppContext.getContext();
     private IEmployerService iEmployerService;
 
-    public EmployerJacksonServlet(){
-       this.iEmployerService=context.getBean(IEmployerService.class);
+    public EmployerJacksonServlet(IEmployerService iEmployerService) {
+        this.iEmployerService = iEmployerService;
     }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> add(@RequestBody Employer employer){
+        return new ResponseEntity<>(iEmployerService.add(employer), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity<?> get(@PathVariable ("id") Long id){
+        return new ResponseEntity<>(iEmployerService.get(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(iEmployerService.getAll(),HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -39,7 +62,10 @@ public class EmployerJacksonServlet extends HttpServlet {
         Employer employer = objectMapper.readValue(req.getInputStream(), Employer.class);
         long id = this.iEmployerService.add(employer);
         String registration="Сотрудник " + employer.getName() + " успешно зарегистрирован под номером " + id;
-        resp.sendRedirect(req.getContextPath()+"/employer_api?registration="+URLEncoder.encode(registration,"UTF-8"));
+        resp.sendRedirect(req.getContextPath()+"/employer_api?registration="+ URLEncoder.encode(registration,"UTF-8"));
     }
-}
 
+
+     */
+
+    }

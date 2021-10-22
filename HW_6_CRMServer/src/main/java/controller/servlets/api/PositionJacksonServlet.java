@@ -3,29 +3,42 @@ package controller.servlets.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Position;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import service.PositionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import service.api.IPositionService;
-import utils.AppContext;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLEncoder;
+@RestController
+@RequestMapping("/api/positions")
+public class PositionJacksonServlet {
 
-@WebServlet(name = "PositionJacksonServlet", urlPatterns = "/position_api")
-public class PositionJacksonServlet extends HttpServlet {
-    private ObjectMapper objectMapper=new ObjectMapper();
-    private ApplicationContext context= AppContext.getContext();
     private IPositionService iPositionService;
 
-    public PositionJacksonServlet(){
-       this.iPositionService= context.getBean(IPositionService.class);
+    public PositionJacksonServlet(IPositionService iPositionService) {
+        this.iPositionService = iPositionService;
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> add(@RequestBody Position position){
+        return new ResponseEntity<>(iPositionService.add(position), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity<?> get(@PathVariable("id") Long id){
+        return new ResponseEntity<>(iPositionService.get(id),HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(iPositionService.getAll(),HttpStatus.OK);
+    }
+
+
+
+
+
+
+    /*
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("registration",req.getParameter("registration"));
@@ -39,4 +52,6 @@ public class PositionJacksonServlet extends HttpServlet {
         String registration="Должность " + position.getName() + " внесена в базу под номером " + id;
         resp.sendRedirect(req.getContextPath()+"/position_api?registration="+ URLEncoder.encode(registration,"UTF-8"));
     }
+
+     */
 }

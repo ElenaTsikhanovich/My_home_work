@@ -16,7 +16,7 @@ pageEncoding="UTF-8"%>
 	<title>Список сотрудников</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/employer" method="get">
+<form action="${pageContext.request.contextPath}/employer/search" method="get">
                  <input type="text" name="name" placeholder="имя">
                  <input type="text" name="salaryFrom" placeholder="зарплата от">
                  <input type="text" name="salaryTo" placeholder="зарплата до">
@@ -28,17 +28,17 @@ pageEncoding="UTF-8"%>
 <c:if test="${requestScope.employers != null}">
    <h1>Список сотрудников предприятия</h1>
    <c:forEach var="employer" items="${employers}" >
-       <p style="color:black"><a href="${pageContext.request.contextPath}/employer?id=${employer.getId()}">${employer.getName()}</a></p>
+       <p style="color:black"><a href="${pageContext.request.contextPath}/employer/id?id=${employer.getId()}">${employer.getName()}</a></p>
    </c:forEach>
 </c:if>
 
 <c:if test="${requestScope.page != 1}">
    <c:choose>
       <c:when test="${requestScope.url != null}">
-         <a href="${pageContext.request.contextPath}/employer?limit=20&page=${requestScope.page-1}${requestScope.url}"><<</a>
+         <a href="${pageContext.request.contextPath}/employer/search?limit=20&page=${requestScope.page-1}${requestScope.url}"><<</a>
       </c:when>
       <c:otherwise>
-          <a href="${pageContext.request.contextPath}/employer?limit=20&page=${requestScope.page-1}"><<</a>
+          <a href="${pageContext.request.contextPath}/employer/limit?limit=20&page=${requestScope.page-1}"><<</a>
       </c:otherwise>
    </c:choose>
 </c:if>
@@ -52,10 +52,10 @@ pageEncoding="UTF-8"%>
           <c:otherwise>
              <c:choose>
                  <c:when test="${requestScope.url != null}">
-                      <td><a href="${pageContext.request.contextPath}/employer?limit=20&page=${i}${requestScope.url}">${i}</a></td>
+                      <td><a href="${pageContext.request.contextPath}/employer/search?limit=20&page=${i}${requestScope.url}">${i}</a></td>
                  </c:when>
                  <c:otherwise>
-                      <td><a href="${pageContext.request.contextPath}/employer?limit=20&page=${i}">${i}</a></td>
+                      <td><a href="${pageContext.request.contextPath}/employer/limit?limit=20&page=${i}">${i}</a></td>
                  </c:otherwise>
              </c:choose>
           </c:otherwise>
@@ -66,10 +66,10 @@ pageEncoding="UTF-8"%>
 <c:if test="${requestScope.page != pageCount}">
 <c:choose>
       <c:when test="${requestScope.url != null}">
-         <a href="./employer?limit=20&page=${requestScope.page+1}${requestScope.url}">>></a>
+         <a href="./employer/search?limit=20&page=${requestScope.page+1}${requestScope.url}">>></a>
       </c:when>
       <c:otherwise>
-         <a href="./employer?limit=20&page=${requestScope.page+1}">>></a>
+         <a href="./employer/limit?limit=20&page=${requestScope.page+1}">>></a>
       </c:otherwise>
    </c:choose>
 </c:if>
