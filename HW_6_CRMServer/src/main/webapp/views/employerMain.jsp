@@ -66,6 +66,7 @@ let request = new Request(event.target.action, {
 fetch(request).then(
 	function (response){
 		console.log(response);
+		window.location('employer?id=' + response )
 	},
 	function(error){
 		console.log(error);

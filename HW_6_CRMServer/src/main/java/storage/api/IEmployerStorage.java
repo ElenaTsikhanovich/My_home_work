@@ -12,5 +12,5 @@ public interface IEmployerStorage {
     List<Employer> getLimit(int limit, int offset);
     long getCount();
     List<Employer> find(EmployerParamsDTO employerParamsDTO);
-    Long getCountFromFind(EmployerParamsDTO employerParamsDTO);
+    Long getCount(EmployerParamsDTO employerParamsDTO);
 }

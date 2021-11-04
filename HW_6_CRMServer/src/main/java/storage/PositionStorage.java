@@ -19,7 +19,7 @@ public class PositionStorage implements IPositionStorage {
 
     @Override
     public long add(Position position) {
-        long positionId=0;
+        Long positionId;
         try (Connection connection = dataSource.getConnection();) {
             try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.positions" +
                     " (name) " +

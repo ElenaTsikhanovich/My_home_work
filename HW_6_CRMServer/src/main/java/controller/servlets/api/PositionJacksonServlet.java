@@ -34,24 +34,4 @@ public class PositionJacksonServlet {
     }
 
 
-
-
-
-
-    /*
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("registration",req.getParameter("registration"));
-        req.getRequestDispatcher("views/positionMain.jsp").forward(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Position position = objectMapper.readValue(req.getInputStream(), Position.class);
-        final long id = this.iPositionService.add(position);
-        String registration="Должность " + position.getName() + " внесена в базу под номером " + id;
-        resp.sendRedirect(req.getContextPath()+"/position_api?registration="+ URLEncoder.encode(registration,"UTF-8"));
-    }
-
-     */
 }

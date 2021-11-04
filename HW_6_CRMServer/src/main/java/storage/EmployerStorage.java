@@ -1,20 +1,12 @@
 package storage;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import model.Department;
 import model.Employer;
 import model.Position;
-
-
 import model.dto.EmployerParamsDTO;
-import service.DepartmentService;
-import service.PositionService;
-import service.api.IDepartmentService;
-import service.api.IPositionService;
 import storage.api.IDepartmentStorage;
 import storage.api.IEmployerStorage;
 import storage.api.IPositionStorage;
-import storage.utils.AppDataSource;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,7 +25,7 @@ public class EmployerStorage implements IEmployerStorage {
 
     @Override
     public long add(Employer employer) {
-        long employerId=0;
+        Long employerId;
         try (Connection connection = dataSource.getConnection();) {
             try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.employers" +
                     " (name, salary, department, position) " +
@@ -82,29 +74,19 @@ public class EmployerStorage implements IEmployerStorage {
 
     @Override
     public List<Employer> getAll() {
-        List<Employer> allEmployers=new ArrayList<>();
         try (Connection connection = dataSource.getConnection();){
             try (PreparedStatement preparedStatement=connection.prepareStatement("SELECT employers.id, employers.name, " +
                     "employers.salary, employers.department, employers.position FROM application.employers;")){
                 final ResultSet resultSet = preparedStatement.executeQuery();
-                while (resultSet.next()){
-                    Employer employer = new Employer();
-                    employer.setId(resultSet.getLong(1));
-                    employer.setName(resultSet.getString(2));
-                    employer.setSalary(resultSet.getDouble(3));
-                    employer.setDepartment(this.iDepartmentStorage.get(resultSet.getLong(4)));
-                    employer.setPosition(this.iPositionStorage.get(resultSet.getLong(5)));
-                    allEmployers.add(employer);
-                }
+                List<Employer> listEmployers = getListEmployers(resultSet);
+                return listEmployers;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Ошибка работы с базой данных", e);
         }
-        return allEmployers;
     }
 
     public List<Employer> getLimit(int limit, int offset){
-        List<Employer> limitEmployers=new ArrayList<>();
         try (Connection connection = dataSource.getConnection();){
             try(PreparedStatement preparedStatement=connection.prepareStatement("SELECT employers.id, " +
                     "employers.name, employers.salary, employers.department, employers.position " +
@@ -112,22 +94,14 @@ public class EmployerStorage implements IEmployerStorage {
                 preparedStatement.setInt(1,limit);
                 preparedStatement.setInt(2,offset);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                while (resultSet.next()){
-                    Employer employer = new Employer();
-                    employer.setId(resultSet.getLong(1));
-                    employer.setName(resultSet.getString(2));
-                    employer.setSalary(resultSet.getDouble(3));
-                    employer.setDepartment(this.iDepartmentStorage.get(resultSet.getLong(4)));
-                    employer.setPosition(this.iPositionStorage.get(resultSet.getLong(5)));
-                    limitEmployers.add(employer);
-                }
+                List<Employer> listEmployers = getListEmployers(resultSet);
+                return listEmployers;
             }
-
         }  catch (SQLException e) {
             throw new IllegalStateException("Ошибка работы с базой данных", e);
         }
-        return limitEmployers;
     }
+
 
     public long getCount(){
         long count=0;
@@ -147,7 +121,6 @@ public class EmployerStorage implements IEmployerStorage {
 
     @Override
     public List<Employer> find(EmployerParamsDTO employerParamsDTO) {
-        List<Employer> employers=new ArrayList<>();
         try(Connection connection = dataSource.getConnection()){
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT " +
                     "employers.id, employers.name, employers.salary, employers.department, employers.position " +
@@ -158,24 +131,16 @@ public class EmployerStorage implements IEmployerStorage {
                 preparedStatement.setDouble(2,employerParamsDTO.getSalaryFrom());
                 preparedStatement.setDouble(3,employerParamsDTO.getSalaryTo());
                 ResultSet resultSet = preparedStatement.executeQuery();
-                while (resultSet.next()){
-                    Employer employer = new Employer();
-                    employer.setId(resultSet.getLong(1));
-                    employer.setName(resultSet.getString(2));
-                    employer.setSalary(resultSet.getDouble(3));
-                    employer.setDepartment(this.iDepartmentStorage.get(resultSet.getLong(4)));
-                    employer.setPosition(this.iPositionStorage.get(resultSet.getLong(5)));
-                    employers.add(employer);
-                }
+                List<Employer> listEmployers = getListEmployers(resultSet);
+                return listEmployers;
             }
         }catch (SQLException e){
             throw new IllegalStateException("Ошибка работы с базой данных");
         }
-        return employers;
     }
 
     @Override
-    public Long getCountFromFind(EmployerParamsDTO employerParamsDTO) {
+    public Long getCount(EmployerParamsDTO employerParamsDTO) {
         long count=0;
         try(Connection connection = dataSource.getConnection();) {
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(id) " +
@@ -193,6 +158,22 @@ public class EmployerStorage implements IEmployerStorage {
             throw new IllegalStateException("Ошибка работы с базой данных", e);
         }
         return count;
+    }
+
+
+    private List<Employer> getListEmployers(ResultSet resultSet) throws SQLException {
+        List<Employer> allEmployers=new ArrayList<>();
+        while (resultSet.next()){
+            Employer employer = new Employer();
+            employer.setId(resultSet.getLong(1));
+            employer.setName(resultSet.getString(2));
+            employer.setSalary(resultSet.getDouble(3));
+            employer.setDepartment(this.iDepartmentStorage.get(resultSet.getLong(4)));
+            employer.setPosition(this.iPositionStorage.get(resultSet.getLong(5)));
+            allEmployers.add(employer);
+        }
+        return allEmployers;
+
     }
 }
 

@@ -8,9 +8,9 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import storage.api.IEmployerStorage;
 import storage.utils.AppHibernate;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmployerHibernateStorage implements IEmployerStorage {
@@ -22,69 +22,45 @@ public class EmployerHibernateStorage implements IEmployerStorage {
 
     @Override
     public long add(Employer employer) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Long id= (Long) session.save(employer);
-        transaction.commit();
-        session.close();
-        return id;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Long id = (Long) session.save(employer);
+            transaction.commit();
+            return id;
+        } catch (Exception e) {
+            throw new IllegalStateException("Ошибка работы с базой данных");
+        }
     }
 
     @Override
     public Employer get(Long id) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Employer employer = session.get(Employer.class, id);
-        transaction.commit();
-        session.close();
-        return employer;
+        try(Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Employer employer = session.get(Employer.class, id);
+            transaction.commit();
+            return employer;
+        }catch (Exception e){
+            throw new IllegalStateException("Ошибка работы с базой данных");
+        }
     }
 
     @Override
     public List<Employer> getAll() {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        CriteriaBuilder criteriaBuilder = AppHibernate.getSessionFactory().createEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Employer> query = criteriaBuilder.createQuery(Employer.class);
-        Root<Employer> itemRoot = query.from(Employer.class);
-        CriteriaQuery<Employer> select = query.select(itemRoot);
-        Query<Employer> query1 = session.createQuery(select);
-        List<Employer> resultList = query1.getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return resultList;
+        return find(null);
     }
+
 
     @Override
     public List<Employer> getLimit(int limit, int offset) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        CriteriaBuilder criteriaBuilder = sessionFactory.createEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Employer> query = criteriaBuilder.createQuery(Employer.class);
-        Root<Employer> itemRoot = query.from(Employer.class);
-        CriteriaQuery<Employer> select = query.select(itemRoot);
-        Query<Employer> query1 = session.createQuery(select);
-        query1.setFirstResult(offset);
-        query1.setMaxResults(limit);
-        List<Employer> resultList1 = query1.getResultList();
-        session.getTransaction().commit();
-        session.close();
-        return resultList1;
+        EmployerParamsDTO employerParamsDTO = new EmployerParamsDTO();
+        employerParamsDTO.setLimit(limit);
+        employerParamsDTO.setOffset(offset);
+        return find(employerParamsDTO);
     }
 
     @Override
     public long getCount() {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        CriteriaBuilder criteriaBuilder =sessionFactory.createEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
-        Root<Employer> itemRoot = query.from(Employer.class);
-        CriteriaQuery<Long> select = query.select(criteriaBuilder.count(itemRoot));
-        Query<Long> query1 = session.createQuery(select);
-        Long singleResult = query1.getSingleResult();
-        session.getTransaction().commit();
-        session.close();
-        return singleResult;
+        return getCount(null);
     }
 
     @Override
@@ -94,36 +70,77 @@ public class EmployerHibernateStorage implements IEmployerStorage {
         CriteriaBuilder criteriaBuilder = sessionFactory.createEntityManager().getCriteriaBuilder();
         CriteriaQuery<Employer> query = criteriaBuilder.createQuery(Employer.class);
         Root<Employer> itemRoot = query.from(Employer.class);
-        CriteriaQuery<Employer> where = query.where(criteriaBuilder.and(
-                criteriaBuilder.like(itemRoot.get("name"), "%" + employerParamsDTO.getName() + "%"),
-                criteriaBuilder.between(
-                        itemRoot.get("salary"), employerParamsDTO.getSalaryFrom(), employerParamsDTO.getSalaryTo())));
-        Query<Employer> queryOne = session.createQuery(where);
-        Integer offset = employerParamsDTO.getOffset();
-        Integer limit = employerParamsDTO.getLimit();
-        queryOne.setFirstResult(offset);
-        queryOne.setMaxResults(limit);
-        List<Employer> resultList = queryOne.getResultList();
+        CriteriaQuery<Employer> select = query.select(itemRoot);
+        select.orderBy(criteriaBuilder.asc(itemRoot.get("id")));
+        if(employerParamsDTO!=null) {
+            Expression<Boolean> booleanExpression = generateWhere(employerParamsDTO, criteriaBuilder, itemRoot);
+            if(booleanExpression!=null) {
+                query.where(booleanExpression);
+            }
+        }
+        Query<Employer> query1 = session.createQuery(query);
+        setLimitOffset(employerParamsDTO,query1);
+        List<Employer> resultList = query1.getResultList();
         session.getTransaction().commit();
         session.close();
         return resultList;
     }
 
     @Override
-    public Long getCountFromFind(EmployerParamsDTO employerParamsDTO) {
+    public Long getCount(EmployerParamsDTO employerParamsDTO) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         CriteriaBuilder criteriaBuilder = sessionFactory.createEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
         Root<Employer> itemRoot = query.from(Employer.class);
-        CriteriaQuery<Long> where = query.select(criteriaBuilder.count(itemRoot)).where(criteriaBuilder.and(
-                criteriaBuilder.like(itemRoot.get("name"), "%" + employerParamsDTO.getName() + "%"),
-                criteriaBuilder.between(
-                        itemRoot.get("salary"), employerParamsDTO.getSalaryFrom(), employerParamsDTO.getSalaryTo())));
-        Query<Long> query1 = session.createQuery(where);
-        Long singleResult = query1.getSingleResult();
+        query.select(criteriaBuilder.count(itemRoot));
+        if(employerParamsDTO!=null) {
+            Expression<Boolean> booleanExpression = generateWhere(employerParamsDTO, criteriaBuilder, itemRoot);
+            if(booleanExpression!=null) {
+                query.where(booleanExpression);
+            }
+        }
+        Query<Long> query1 = session.createQuery(query);
+        Long singleResult= query1.getSingleResult();
         session.getTransaction().commit();
         session.close();
         return singleResult;
     }
+
+    private void setLimitOffset(EmployerParamsDTO employerParamsDTO,Query<?> query ){
+        if(employerParamsDTO!=null){
+            Integer offset = employerParamsDTO.getOffset();
+            Integer limit = employerParamsDTO.getLimit();
+            if(offset!=null) {
+                query.setFirstResult(offset);
+            }
+            if(limit!=null){
+                query.setMaxResults(limit);
+            }
+        }
+    }
+
+
+    private Expression<Boolean> generateWhere(EmployerParamsDTO employerParamsDTO,
+                                             CriteriaBuilder criteriaBuilder, Root<Employer> itemRoot){
+        List<Predicate>predicates=new ArrayList<>();
+        if(employerParamsDTO.getName()!=null && !employerParamsDTO.getName().isEmpty()){
+            predicates.add(criteriaBuilder.like(itemRoot.get("name"), "%" + employerParamsDTO.getName() + "%"));
+        }
+        if(employerParamsDTO.getSalaryFrom()!=null && employerParamsDTO.getSalaryTo()!=null){
+            predicates.add(criteriaBuilder.between(
+                    itemRoot.get("salary"), employerParamsDTO.getSalaryFrom(), employerParamsDTO.getSalaryTo()));
+        }else if(employerParamsDTO.getSalaryFrom()==null && employerParamsDTO.getSalaryTo()!=null){
+            predicates.add(criteriaBuilder.le(itemRoot.get("salary"),employerParamsDTO.getSalaryTo()));
+
+        }else if(employerParamsDTO.getSalaryTo()==null && employerParamsDTO.getSalaryFrom()!=null){
+            predicates.add(criteriaBuilder.ge(itemRoot.get("salary"),employerParamsDTO.getSalaryFrom()));
+        }
+        if(predicates.size()==0){
+            return null;
+        }
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+
+    }
+
 }

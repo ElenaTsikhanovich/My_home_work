@@ -20,7 +20,7 @@ public class DepartmentStorage implements IDepartmentStorage {
 
     @Override
     public long add(Department department) {
-        long departmentId=0;
+        Long departmentId;
         try (Connection connection = dataSource.getConnection();) {
             if(department.getParent()!=null) {
                 try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO application.departments" +

@@ -1,5 +1,5 @@
 package model.dto;
-//добавить главный класс с пэийдж и фильтр остальные фильтры наследуются и добавляются нужные поля для поиска
+
 public class EmployerParamsDTO {
     private String name;
     private Double salaryFrom;
@@ -12,13 +12,6 @@ public class EmployerParamsDTO {
 
     }
 
-    public EmployerParamsDTO(String name, Double salaryFrom, Double salaryTo, Integer page, Integer limit) {
-        this.name = name;
-        this.salaryFrom = salaryFrom;
-        this.salaryTo = salaryTo;
-        this.page = page;
-        this.limit = limit;
-    }
 
     public String getName() {
         return name;

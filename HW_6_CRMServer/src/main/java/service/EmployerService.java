@@ -7,8 +7,6 @@ import model.dto.EmployerParamsDTO;
 import service.api.IDepartmentService;
 import service.api.IEmployerService;
 import service.api.IPositionService;
-import storage.EmployerHibernateStorage;
-import storage.EmployerStorage;
 import storage.api.IEmployerStorage;
 import java.util.List;
 
@@ -82,7 +80,7 @@ public class EmployerService implements IEmployerService {
     }
 
     public Long getCountFromFind(EmployerParamsDTO employerParamsDTO){
-        Long countFromFind = this.iEmployerStorage.getCountFromFind(employerParamsDTO);
+        Long countFromFind = this.iEmployerStorage.getCount(employerParamsDTO);
         return countFromFind;
 
     }
